@@ -1,0 +1,17 @@
+name: Perform Checks
+on: push
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Rust
+        run: |
+          rustup update stable && rustup default stable
+          rustup component add rustfmt
+          rustup component add clippy
+      - name: Perform Checks
+        run: |
+          cargo check
+          cargo fmt --all --check
+          cargo clippy --workspace --all-targets --no-deps -- -D warnings
