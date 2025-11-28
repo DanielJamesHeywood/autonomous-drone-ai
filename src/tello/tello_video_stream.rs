@@ -4,9 +4,9 @@ pub struct TelloVideoStream {
     socket: UdpSocket,
 }
 
-impl TelloState {
-    pub fn bind() -> std::io::Result<TelloState> {
+impl TelloVideoStream {
+    pub fn bind() -> std::io::Result<TelloVideoStream> {
         let socket = UdpSocket::bind(SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), 11111))?;
-        Ok(TelloState { socket })
+        Ok(TelloVideoStream { socket })
     }
 }
