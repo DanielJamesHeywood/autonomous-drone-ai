@@ -1,4 +1,4 @@
-use std::net::*;
+use std::net::{Ipv4Addr, SocketAddrV4, UdpSocket};
 
 pub struct CommandSocket {
     socket: UdpSocket,
