@@ -1,12 +1,12 @@
 use std::net::*;
 
-pub struct TelloState {
+pub struct StateSocket {
     socket: UdpSocket,
 }
 
-impl TelloState {
-    pub fn bind() -> std::io::Result<TelloState> {
+impl StateSocket {
+    pub fn bind() -> std::io::Result<StateSocket> {
         let socket = UdpSocket::bind(SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), 8890))?;
-        Ok(TelloState { socket })
+        Ok(StateSocket { socket })
     }
 }

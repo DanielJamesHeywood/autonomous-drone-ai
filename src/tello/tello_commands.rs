@@ -1,19 +1,19 @@
 use std::net::*;
 
-pub struct TelloCommands {
+pub struct CommandSocket {
     socket: UdpSocket,
 }
 
-impl TelloCommands {
-    pub fn bind_and_connect() -> std::io::Result<TelloCommands> {
-        let commands = TelloCommands::bind()?;
-        commands.connect()?;
-        Ok(commands)
+impl CommandSocket {
+    pub fn bind_and_connect() -> std::io::Result<CommandSocket> {
+        let socket = CommandSocket::bind()?;
+        socket.connect()?;
+        Ok(socket)
     }
 
-    fn bind() -> std::io::Result<TelloCommands> {
+    fn bind() -> std::io::Result<CommandSocket> {
         let socket = UdpSocket::bind(SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), 0))?;
-        Ok(TelloCommands { socket })
+        Ok(CommandSocket { socket })
     }
 
     fn connect(&self) -> std::io::Result<()> {

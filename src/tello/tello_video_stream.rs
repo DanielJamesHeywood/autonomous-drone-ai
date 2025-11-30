@@ -1,12 +1,12 @@
 use std::net::*;
 
-pub struct TelloVideoStream {
+pub struct VideoStreamSocket {
     socket: UdpSocket,
 }
 
-impl TelloVideoStream {
-    pub fn bind() -> std::io::Result<TelloVideoStream> {
+impl VideoStreamSocket {
+    pub fn bind() -> std::io::Result<VideoStreamSocket> {
         let socket = UdpSocket::bind(SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), 11111))?;
-        Ok(TelloVideoStream { socket })
+        Ok(VideoStreamSocket { socket })
     }
 }
