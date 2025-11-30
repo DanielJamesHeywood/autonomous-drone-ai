@@ -21,4 +21,14 @@ impl CommandSocket {
             .connect(SocketAddrV4::new(Ipv4Addr::new(192, 168, 10, 1), 8889))?;
         Ok(())
     }
+
+    fn receive_response(&self) -> io::Result<()> {
+        let mut buffer = [0; 5];
+        let number_of_bytes_read = self.socket.recv(&mut buffer)?;
+        match str::from_utf8(&buffer[..number_of_bytes_read]).map_err(io::Error::other)? {
+            "ok" => Ok(()),
+            "error" => Err(io::Error::other("received \"error\" response")),
+            _ => Err(io::Error::other("received invalid response")),
+        }
+    }
 }
