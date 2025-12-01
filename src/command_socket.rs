@@ -22,6 +22,12 @@ impl CommandSocket {
         Ok(())
     }
 
+    pub fn send_command_and_receive_response(&self) -> io::Result<()> {
+        self.send_command()?;
+        self.receive_response()?;
+        Ok(())
+    }
+
     fn send_command(&self) -> io::Result<()> {
         self.socket.send("Command".as_bytes())?;
         Ok(())
