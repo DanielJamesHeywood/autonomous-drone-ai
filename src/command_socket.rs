@@ -1,3 +1,4 @@
+use std::io;
 use std::net::{Ipv4Addr, SocketAddrV4, UdpSocket};
 
 pub struct CommandSocket {
@@ -5,18 +6,18 @@ pub struct CommandSocket {
 }
 
 impl CommandSocket {
-    pub fn bind_and_connect() -> std::io::Result<CommandSocket> {
+    pub fn bind_and_connect() -> io::Result<CommandSocket> {
         let socket = CommandSocket::bind()?;
         socket.connect()?;
         Ok(socket)
     }
 
-    fn bind() -> std::io::Result<CommandSocket> {
+    fn bind() -> io::Result<CommandSocket> {
         let socket = UdpSocket::bind(SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), 0))?;
         Ok(CommandSocket { socket })
     }
 
-    fn connect(&self) -> std::io::Result<()> {
+    fn connect(&self) -> io::Result<()> {
         self.socket
             .connect(SocketAddrV4::new(Ipv4Addr::new(192, 168, 10, 1), 8889))?;
         Ok(())
