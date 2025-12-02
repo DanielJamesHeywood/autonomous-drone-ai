@@ -56,6 +56,28 @@ impl CommandSocket {
         Ok(())
     }
 
+    pub fn send_stream_on_and_receive_response(&self) -> io::Result<()> {
+        self.send_stream_on()?;
+        self.receive_response()?;
+        Ok(())
+    }
+
+    fn send_stream_on(&self) -> io::Result<()> {
+        self.socket.send("streamon".as_bytes())?;
+        Ok(())
+    }
+
+    pub fn send_stream_off_and_receive_response(&self) -> io::Result<()> {
+        self.send_stream_off()?;
+        self.receive_response()?;
+        Ok(())
+    }
+
+    fn send_stream_off(&self) -> io::Result<()> {
+        self.socket.send("streamoff".as_bytes())?;
+        Ok(())
+    }
+
     fn receive_response(&self) -> io::Result<()> {
         let mut buffer = [0; 5];
         let number_of_bytes_read = self.socket.recv(&mut buffer)?;
