@@ -34,6 +34,28 @@ impl CommandSocket {
         Ok(())
     }
 
+    pub fn send_takeoff_and_receive_response(&self) -> io::Result<()> {
+        self.send_takeoff()?;
+        self.receive_response()?;
+        Ok(())
+    }
+
+    fn send_takeoff(&self) -> io::Result<()> {
+        self.socket.send("takeoff".as_bytes())?;
+        Ok(())
+    }
+
+    pub fn send_land_and_receive_response(&self) -> io::Result<()> {
+        self.send_land()?;
+        self.receive_response()?;
+        Ok(())
+    }
+
+    fn send_land(&self) -> io::Result<()> {
+        self.socket.send("land".as_bytes())?;
+        Ok(())
+    }
+
     fn receive_response(&self) -> io::Result<()> {
         let mut buffer = [0; 5];
         let number_of_bytes_read = self.socket.recv(&mut buffer)?;
