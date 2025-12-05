@@ -35,7 +35,7 @@ impl CommandSocket {
     }
 
     pub fn send_take_off_and_receive_response(&self) -> io::Result<()> {
-        self.send_takeoff()?;
+        self.send_take_off()?;
         self.receive_response()?;
         Ok(())
     }
