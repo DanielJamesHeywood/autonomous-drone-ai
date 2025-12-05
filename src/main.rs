@@ -1,6 +1,7 @@
 mod command_socket;
 
 use std::io;
+use command_socket::CommandSocket;
 
 fn main() {
     let command_socket =
