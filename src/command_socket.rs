@@ -78,6 +78,17 @@ impl CommandSocket {
         Ok(())
     }
 
+    pub fn send_emergency_and_receive_response(&self) -> io::Result<()> {
+        self.send_emergency()?;
+        self.receive_response()?;
+        Ok(())
+    }
+
+    fn send_emergency(&self) -> io::Result<()> {
+        self.socket.send("emergency".as_bytes())?;
+        Ok(())
+    }
+
     fn receive_response(&self) -> io::Result<()> {
         let mut buffer = [0; 5];
         let number_of_bytes_read = self.socket.recv(&mut buffer)?;
