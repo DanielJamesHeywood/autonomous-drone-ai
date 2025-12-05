@@ -1,6 +1,8 @@
 use std::io;
 
 fn main() {
+    let command_socket =
+        CommandSocket::bind_and_connect().expect("Failed to bind and connect command socket");
     let standard_input = io::stdin();
     loop {
         let mut buffer = String::new();
