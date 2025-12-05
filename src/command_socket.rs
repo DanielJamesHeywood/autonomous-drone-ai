@@ -30,7 +30,7 @@ impl CommandSocket {
     }
 
     fn send_command(&self) -> io::Result<()> {
-        self.socket.send("Command".as_bytes())?;
+        self.socket.send("command".as_bytes())?;
         Ok(())
     }
 
