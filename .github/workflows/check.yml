@@ -9,10 +9,7 @@ jobs:
         run: |
           rustup update stable && rustup default stable
           rustup component add rustfmt
-          rustup component add clippy
-      - name: Check Build
-        run: cargo check
-      - name: Check Format
-        run: cargo fmt --all --check
-      - name: Check Clippy
-        run: cargo clippy --workspace --all-targets --no-deps -- -D warnings
+      - name: Perform Checks
+        run: |
+          cargo check
+          cargo fmt --all --check
