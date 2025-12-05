@@ -1,3 +1,5 @@
+mod command_socket;
+
 use std::io;
 
 fn main() {
