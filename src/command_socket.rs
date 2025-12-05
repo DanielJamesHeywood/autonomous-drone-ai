@@ -34,13 +34,13 @@ impl CommandSocket {
         Ok(())
     }
 
-    pub fn send_takeoff_and_receive_response(&self) -> io::Result<()> {
+    pub fn send_take_off_and_receive_response(&self) -> io::Result<()> {
         self.send_takeoff()?;
         self.receive_response()?;
         Ok(())
     }
 
-    fn send_takeoff(&self) -> io::Result<()> {
+    fn send_take_off(&self) -> io::Result<()> {
         self.socket.send("takeoff".as_bytes())?;
         Ok(())
     }
