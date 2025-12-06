@@ -228,6 +228,22 @@ impl CommandSocket {
         Ok(())
     }
 
+    pub fn send_speed_and_receive_response(&self, x: u16) -> io::Result<()> {
+        self.send_speed(x)?;
+        self.receive_response()?;
+        Ok(())
+    }
+
+    fn send_speed(&self, x: u16) -> io::Result<()> {
+        if !(10..=100).contains(&x) {
+            return Err(io::Error::other(
+                "\"x\" must be between 10 and 100 centimetres per second",
+            ));
+        }
+        self.socket.send(format!("speed {x}").as_bytes())?;
+        Ok(())
+    }
+
     fn receive_response(&self) -> io::Result<()> {
         let mut buffer = [0; 5];
         let number_of_bytes_read = self.socket.recv(&mut buffer)?;
