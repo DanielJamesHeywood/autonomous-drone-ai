@@ -89,6 +89,22 @@ impl CommandSocket {
         Ok(())
     }
 
+    pub fn send_up_and_receive_response(&self, x: u16) -> io::Result<()> {
+        self.send_up(x)?;
+        self.receive_response()?;
+        Ok(())
+    }
+
+    fn send_up(&self, x: u16) -> io::Result<()> {
+        if !(20..=500).contains(&x) {
+            return Err(io::Error::other(
+                "\"x\" must be between 20 and 500 centimetres",
+            ));
+        }
+        self.socket.send(format!("up {x}").as_bytes())?;
+        Ok(())
+    }
+
     fn receive_response(&self) -> io::Result<()> {
         let mut buffer = [0; 5];
         let number_of_bytes_read = self.socket.recv(&mut buffer)?;
