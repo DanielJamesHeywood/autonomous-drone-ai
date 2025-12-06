@@ -105,6 +105,86 @@ impl CommandSocket {
         Ok(())
     }
 
+    pub fn send_down_and_receive_response(&self, x: u16) -> io::Result<()> {
+        self.send_down(x)?;
+        self.receive_response()?;
+        Ok(())
+    }
+
+    fn send_down(&self, x: u16) -> io::Result<()> {
+        if !(20..=500).contains(&x) {
+            return Err(io::Error::other(
+                "\"x\" must be between 20 and 500 centimetres",
+            ));
+        }
+        self.socket.send(format!("down {x}").as_bytes())?;
+        Ok(())
+    }
+
+    pub fn send_left_and_receive_response(&self, x: u16) -> io::Result<()> {
+        self.send_left(x)?;
+        self.receive_response()?;
+        Ok(())
+    }
+
+    fn send_left(&self, x: u16) -> io::Result<()> {
+        if !(20..=500).contains(&x) {
+            return Err(io::Error::other(
+                "\"x\" must be between 20 and 500 centimetres",
+            ));
+        }
+        self.socket.send(format!("left {x}").as_bytes())?;
+        Ok(())
+    }
+
+    pub fn send_right_and_receive_response(&self, x: u16) -> io::Result<()> {
+        self.send_right(x)?;
+        self.receive_response()?;
+        Ok(())
+    }
+
+    fn send_right(&self, x: u16) -> io::Result<()> {
+        if !(20..=500).contains(&x) {
+            return Err(io::Error::other(
+                "\"x\" must be between 20 and 500 centimetres",
+            ));
+        }
+        self.socket.send(format!("right {x}").as_bytes())?;
+        Ok(())
+    }
+
+    pub fn send_forward_and_receive_response(&self, x: u16) -> io::Result<()> {
+        self.send_forward(x)?;
+        self.receive_response()?;
+        Ok(())
+    }
+
+    fn send_forward(&self, x: u16) -> io::Result<()> {
+        if !(20..=500).contains(&x) {
+            return Err(io::Error::other(
+                "\"x\" must be between 20 and 500 centimetres",
+            ));
+        }
+        self.socket.send(format!("forward {x}").as_bytes())?;
+        Ok(())
+    }
+
+    pub fn send_back_and_receive_response(&self, x: u16) -> io::Result<()> {
+        self.send_back(x)?;
+        self.receive_response()?;
+        Ok(())
+    }
+
+    fn send_back(&self, x: u16) -> io::Result<()> {
+        if !(20..=500).contains(&x) {
+            return Err(io::Error::other(
+                "\"x\" must be between 20 and 500 centimetres",
+            ));
+        }
+        self.socket.send(format!("back {x}").as_bytes())?;
+        Ok(())
+    }
+
     fn receive_response(&self) -> io::Result<()> {
         let mut buffer = [0; 5];
         let number_of_bytes_read = self.socket.recv(&mut buffer)?;
