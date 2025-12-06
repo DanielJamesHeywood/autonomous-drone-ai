@@ -185,6 +185,38 @@ impl CommandSocket {
         Ok(())
     }
 
+    pub fn send_cw_and_receive_response(&self, x: u16) -> io::Result<()> {
+        self.send_cw(x)?;
+        self.receive_response()?;
+        Ok(())
+    }
+
+    fn send_cw(&self, x: u16) -> io::Result<()> {
+        if !(1..=360).contains(&x) {
+            return Err(io::Error::other(
+                "\"x\" must be between 1 and 360 degrees",
+            ));
+        }
+        self.socket.send(format!("cw {x}").as_bytes())?;
+        Ok(())
+    }
+
+    pub fn send_ccw_and_receive_response(&self, x: u16) -> io::Result<()> {
+        self.send_ccw(x)?;
+        self.receive_response()?;
+        Ok(())
+    }
+
+    fn send_ccw(&self, x: u16) -> io::Result<()> {
+        if !(1..=360).contains(&x) {
+            return Err(io::Error::other(
+                "\"x\" must be between 1 and 360 degrees",
+            ));
+        }
+        self.socket.send(format!("ccw {x}").as_bytes())?;
+        Ok(())
+    }
+
     fn receive_response(&self) -> io::Result<()> {
         let mut buffer = [0; 5];
         let number_of_bytes_read = self.socket.recv(&mut buffer)?;
