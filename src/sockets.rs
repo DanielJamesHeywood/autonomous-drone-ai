@@ -250,3 +250,25 @@ impl CommandSocket {
         }
     }
 }
+
+pub struct StateSocket {
+    socket: UdpSocket,
+}
+
+impl StateSocket {
+    pub fn bind() -> io::Result<StateSocket> {
+        let socket = UdpSocket::bind(SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), 8890))?;
+        Ok(StateSocket { socket })
+    }
+}
+
+pub struct VideoStreamSocket {
+    socket: UdpSocket,
+}
+
+impl VideoStreamSocket {
+    pub fn bind() -> io::Result<VideoStreamSocket> {
+        let socket = UdpSocket::bind(SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), 11111))?;
+        Ok(VideoStreamSocket { socket })
+    }
+}

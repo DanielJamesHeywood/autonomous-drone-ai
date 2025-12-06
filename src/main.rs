@@ -1,6 +1,6 @@
-mod command_socket;
+mod sockets;
 
-use command_socket::CommandSocket;
+use sockets::CommandSocket;
 use std::io;
 
 fn main() {
