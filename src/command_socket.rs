@@ -193,9 +193,7 @@ impl CommandSocket {
 
     fn send_cw(&self, x: u16) -> io::Result<()> {
         if !(1..=360).contains(&x) {
-            return Err(io::Error::other(
-                "\"x\" must be between 1 and 360 degrees",
-            ));
+            return Err(io::Error::other("\"x\" must be between 1 and 360 degrees"));
         }
         self.socket.send(format!("cw {x}").as_bytes())?;
         Ok(())
@@ -209,9 +207,7 @@ impl CommandSocket {
 
     fn send_ccw(&self, x: u16) -> io::Result<()> {
         if !(1..=360).contains(&x) {
-            return Err(io::Error::other(
-                "\"x\" must be between 1 and 360 degrees",
-            ));
+            return Err(io::Error::other("\"x\" must be between 1 and 360 degrees"));
         }
         self.socket.send(format!("ccw {x}").as_bytes())?;
         Ok(())
