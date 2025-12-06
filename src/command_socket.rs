@@ -217,6 +217,17 @@ impl CommandSocket {
         Ok(())
     }
 
+    pub fn send_stop_and_receive_response(&self) -> io::Result<()> {
+        self.send_stop()?;
+        self.receive_response()?;
+        Ok(())
+    }
+
+    fn send_stop(&self) -> io::Result<()> {
+        self.socket.send("stop".as_bytes())?;
+        Ok(())
+    }
+
     fn receive_response(&self) -> io::Result<()> {
         let mut buffer = [0; 5];
         let number_of_bytes_read = self.socket.recv(&mut buffer)?;
