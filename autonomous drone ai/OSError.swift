@@ -6,6 +6,7 @@ public struct OSError: Error {
     
     @inlinable
     public init(_ status: OSStatus) {
+        precondition(status != noErr)
         self.status = status
     }
 }
