@@ -40,9 +40,6 @@ public class H264Decoder {
     deinit {
         VTDecompressionSessionInvalidate(_decompressionSession)
     }
-}
-
-extension H264Decoder {
     
     @inlinable
     public func decodeFrame() throws {
@@ -55,9 +52,6 @@ extension H264Decoder {
         )
         guard status == noErr else { throw OSError(status) }
     }
-}
-
-extension H264Decoder {
     
     @inlinable
     public func waitForAsynchronousFrames() throws {
