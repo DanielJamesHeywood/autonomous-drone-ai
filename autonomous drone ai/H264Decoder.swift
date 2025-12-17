@@ -9,5 +9,9 @@ public class H264Decoder {
     public init() {}
     
     @inlinable
-    deinit {}
+    deinit {
+        if let _decompressionSession {
+            VTDecompressionSessionInvalidate(_decompressionSession)
+        }
+    }
 }
