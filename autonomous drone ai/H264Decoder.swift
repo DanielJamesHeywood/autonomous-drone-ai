@@ -1,2 +1,9 @@
 
-public class H264Decoder {}
+public class H264Decoder {
+    
+    @inlinable
+    public init() {}
+    
+    @inlinable
+    deinit {}
+}
