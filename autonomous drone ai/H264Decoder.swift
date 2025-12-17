@@ -13,7 +13,19 @@ public class H264Decoder {
     }
     
     @inlinable
-    public func waitForOutstandingFrames() throws {
+    public func waitForOutstandingFrames() async throws {
+        try await withUnsafeThrowingContinuation { continuation in
+            do {
+                try _waitForOutstandingFrames()
+                continuation.resume()
+            } catch {
+                continuation.resume(throwing: error)
+            }
+        }
+    }
+    
+    @inlinable
+    internal func _waitForOutstandingFrames() throws {
         if let _decompressionSession {
             let status = VTDecompressionSessionWaitForAsynchronousFrames(_decompressionSession)
             guard status == noErr else { throw OSError(status) }
