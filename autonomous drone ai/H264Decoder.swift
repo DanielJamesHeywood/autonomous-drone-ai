@@ -11,6 +11,9 @@ public class H264Decoder {
             VTDecompressionSessionInvalidate(_decompressionSession)
         }
     }
+}
+
+extension H264Decoder {
     
     @inlinable
     public func waitForOutstandingFrames() async throws {
