@@ -3,10 +3,10 @@ import Network
 public class UDPClient {
     
     @usableFromInline
-    internal let _connection: NetworkConnection<UDP>
+    internal let _connection: NWConnection
     
     @inlinable
     public init(for endpoint: NWEndpoint) {
-        _connection = NetworkConnection(to: endpoint, using: { UDP() })
+        _connection = NWConnection(to: endpoint, using: .udp)
     }
 }

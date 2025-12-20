@@ -3,10 +3,10 @@ import Network
 public class UDPServer {
     
     @usableFromInline
-    internal let _listener: NetworkListener<UDP>
+    internal let _listener: NWListener
     
     @inlinable
     public init() throws {
-        _listener = try NetworkListener(using: { UDP() })
+        _listener = try NWListener(using: .udp)
     }
 }
