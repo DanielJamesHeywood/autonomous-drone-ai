@@ -9,4 +9,9 @@ public class UDPServer {
     public init(on port: NWEndpoint.Port) throws {
         _listener = try NWListener(using: .udp, on: port)
     }
+    
+    @inlinable
+    deinit {
+        _listener.cancel()
+    }
 }

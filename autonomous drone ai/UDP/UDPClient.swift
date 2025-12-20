@@ -9,4 +9,9 @@ public class UDPClient {
     public init(for endpoint: NWEndpoint) {
         _connection = NWConnection(to: endpoint, using: .udp)
     }
+    
+    @inlinable
+    deinit {
+        _connection.cancel()
+    }
 }
