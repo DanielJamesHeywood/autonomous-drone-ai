@@ -6,7 +6,7 @@ public class UDPServer {
     internal let _listener: NWListener
     
     @inlinable
-    public init(on port: NWEndpoint.Port = .any) throws {
+    public init(on port: NWEndpoint.Port) throws {
         _listener = try NWListener(using: .udp, on: port)
     }
 }
