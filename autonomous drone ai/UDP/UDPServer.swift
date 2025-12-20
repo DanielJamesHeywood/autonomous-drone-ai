@@ -8,6 +8,7 @@ public class UDPServer {
     @inlinable
     public init(on port: NWEndpoint.Port) throws {
         _listener = try NWListener(using: .udp, on: port)
+        _listener.start(queue: .main)
     }
     
     @inlinable
