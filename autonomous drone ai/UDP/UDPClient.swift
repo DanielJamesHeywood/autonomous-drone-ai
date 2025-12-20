@@ -6,7 +6,8 @@ public class UDPClient {
     internal let _listener: NetworkListener<UDP>
     
     @inlinable
-    public init() throws {
+    public init() async throws {
         _listener = try NetworkListener(using: { UDP() })
+        try await _listener.run { connection in }
     }
 }
