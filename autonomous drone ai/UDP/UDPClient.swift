@@ -1,3 +1,4 @@
+import Foundation
 import Network
 
 public class UDPClient {
@@ -14,5 +15,36 @@ public class UDPClient {
     @inlinable
     deinit {
         _connection.cancel()
+    }
+    
+    @inlinable
+    public func send(_ content: Data) async throws {
+        try await withUnsafeThrowingContinuation { continuation in
+            _connection.send(
+                content: content,
+                completion: .contentProcessed { error in
+                    if let error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume()
+                    }
+                }
+            )
+        }
+    }
+    
+    @inlinable
+    public func receive() async throws -> Data {
+        return try await withUnsafeThrowingContinuation { continuation in
+            _connection.receiveMessage(
+                completion: { content, _, _, error in
+                    if let error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume(returning: content.unsafelyUnwrapped)
+                    }
+                }
+            )
+        }
     }
 }
