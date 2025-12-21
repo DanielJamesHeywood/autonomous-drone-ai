@@ -1,2 +1,4 @@
 
-public enum UDPError: Error {}
+public enum UDPError: Error {
+    case recievedIncompleteMessage
+}

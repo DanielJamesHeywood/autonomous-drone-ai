@@ -37,9 +37,11 @@ public class UDPClient {
     public func receive() async throws -> Data {
         return try await withUnsafeThrowingContinuation { continuation in
             _connection.receiveMessage(
-                completion: { content, _, _, error in
+                completion: { content, _, isComplete, error in
                     if let error {
                         continuation.resume(throwing: error)
+                    } else if !isComplete {
+                        continuation.resume(throwing: UDPError.recievedIncompleteMessage)
                     } else {
                         continuation.resume(returning: content ?? Data())
                     }
