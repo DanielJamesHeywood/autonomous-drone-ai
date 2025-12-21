@@ -41,7 +41,7 @@ public class UDPClient {
                     if let error {
                         continuation.resume(throwing: error)
                     } else if !isComplete {
-                        continuation.resume(throwing: UDPError.recievedIncompleteMessage)
+                        continuation.resume(throwing: UDPError.receivedIncompleteMessage)
                     } else {
                         continuation.resume(returning: content ?? Data())
                     }

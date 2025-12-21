@@ -1,4 +1,4 @@
 
 public enum UDPError: Error {
-    case recievedIncompleteMessage
+    case receivedIncompleteMessage
 }
