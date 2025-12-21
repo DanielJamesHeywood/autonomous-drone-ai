@@ -40,8 +40,10 @@ public class UDPClient {
                 completion: { content, _, _, error in
                     if let error {
                         continuation.resume(throwing: error)
+                    } else if let content {
+                        continuation.resume(returning: content)
                     } else {
-                        continuation.resume(returning: content ?? Data())
+                        continuation.resume(throwing: UDPError.noMessageReceived)
                     }
                 }
             )
