@@ -41,7 +41,7 @@ public class UDPClient {
                     if let error {
                         continuation.resume(throwing: error)
                     } else {
-                        continuation.resume(returning: content.unsafelyUnwrapped)
+                        continuation.resume(returning: content ?? Data())
                     }
                 }
             )
