@@ -30,7 +30,7 @@ public class UDPClient {
                     }
                 }
             )
-        }
+        } as Void
     }
     
     @inlinable
