@@ -8,7 +8,9 @@ public class UDPServer {
     @inlinable
     public init(on port: Endpoint.Port) throws {
         _listener = try NWListener(using: .udp, on: port._convertToNWEndpointPort())
-        _listener.newConnectionHandler = { connection in }
+        _listener.newConnectionHandler = { connection in
+            connection.start(queue: DispatchQueue(label: "udpserver.connection", qos: .utility))
+        }
         _listener.start(queue: DispatchQueue(label: "udpserver.listener", qos: .utility))
     }
     
