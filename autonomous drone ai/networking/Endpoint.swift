@@ -35,6 +35,17 @@ extension Endpoint {
     internal func _convertToNWEndpoint() -> NWEndpoint { _endpoint }
 }
 
+extension Endpoint.Host {
+    
+    @inlinable
+    internal func _convertToNWEndpointHost() -> NWEndpoint.Host {
+        switch self {
+        case let .ipv4(a, b, c, d): return NWEndpoint.Host("\(a).\(b).\(c).\(d)")
+        case let .ipv6(a, b, c, d, e, f): return NWEndpoint.Host("\(a).\(b).\(c).\(d).\(e).\(f)")
+        }
+    }
+}
+
 extension Endpoint.Port {
     
     @inlinable
