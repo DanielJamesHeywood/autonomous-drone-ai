@@ -34,3 +34,9 @@ extension Endpoint {
     @inlinable
     internal func _convertToNWEndpoint() -> NWEndpoint { _endpoint }
 }
+
+extension Endpoint.Port {
+    
+    @inlinable
+    internal func _convertToNWEndpointPort() -> NWEndpoint.Port { NWEndpoint.Port(rawValue: self).unsafelyUnwrapped }
+}
