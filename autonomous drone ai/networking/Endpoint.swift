@@ -2,6 +2,13 @@ import Network
 
 public struct Endpoint {
     
+    public enum Host {
+        case ipv4(UInt8, UInt8, UInt8, UInt8)
+        case ipv6(UInt8, UInt8, UInt8, UInt8, UInt8, UInt8)
+    }
+    
+    public typealias Port = UInt16
+
     @usableFromInline
     internal let _endpoint: NWEndpoint
     
