@@ -8,7 +8,7 @@ public class UDPClient {
     
     @inlinable
     public init(for endpoint: Endpoint) {
-        _connection = NWConnection(to: endpoint._endpoint, using: .udp)
+        _connection = NWConnection(to: endpoint._convertToNWEndpoint(), using: .udp)
         _connection.start(queue: DispatchQueue(label: "udpclient.connection", qos: .utility))
     }
     

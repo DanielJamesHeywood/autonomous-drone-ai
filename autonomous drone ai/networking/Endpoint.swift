@@ -28,3 +28,9 @@ public struct Endpoint {
         }
     }
 }
+
+extension Endpoint {
+    
+    @inlinable
+    internal func _convertToNWEndpoint() -> NWEndpoint { _endpoint }
+}
