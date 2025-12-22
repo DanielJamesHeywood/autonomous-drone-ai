@@ -7,8 +7,8 @@ public class UDPClient {
     internal let _connection: NWConnection
     
     @inlinable
-    public init(for endpoint: NWEndpoint) {
-        _connection = NWConnection(to: endpoint, using: .udp)
+    public init(for endpoint: Endpoint) {
+        _connection = NWConnection(to: endpoint._endpoint, using: .udp)
         _connection.start(queue: DispatchQueue(label: "udpclient.connection", qos: .utility))
     }
     
