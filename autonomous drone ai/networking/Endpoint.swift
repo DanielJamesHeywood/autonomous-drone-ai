@@ -33,10 +33,10 @@ extension Endpoint.Host {
     @inlinable
     internal func _convertToNWEndpointHost() -> NWEndpoint.Host {
         switch self {
-        case let .ipv4(a, b, c, d):
-            return NWEndpoint.Host("\(a).\(b).\(c).\(d)")
-        case let .ipv6(a, b, c, d, e, f):
-            return NWEndpoint.Host("\(a).\(b).\(c).\(d).\(e).\(f)")
+        case let .ipv4(octet1, octet2, octet3, octet4):
+            return NWEndpoint.Host("\(octet1).\(octet2).\(octet3).\(octet4)")
+        case let .ipv6(octet1, octet2, octet3, octet4, octet5, octet6):
+            return NWEndpoint.Host("\(octet1).\(octet2).\(octet3).\(octet4).\(octet5).\(octet6)")
         }
     }
 }
