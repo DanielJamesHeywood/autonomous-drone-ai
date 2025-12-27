@@ -1,3 +1,7 @@
 import Network
 
-public class TelloVideoStream {}
+public class TelloVideoStream {
+    
+    @inlinable
+    public init() {}
+}
