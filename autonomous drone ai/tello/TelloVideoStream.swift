@@ -10,7 +10,16 @@ public class TelloVideoStream {
         _stream = AsyncThrowingStream { continuation in
             do {
                 let listener = try NWListener(using: .udp, on: 11111)
-                listener.stateUpdateHandler = { state in }
+                listener.stateUpdateHandler = { state in
+                    switch state {
+                    case .setup: break
+                    case .waiting(_): break
+                    case .ready: break
+                    case .failed(_): break
+                    case .cancelled: break
+                    @unknown default: break
+                    }
+                }
                 listener.newConnectionHandler = { connection in }
                 listener.start(queue: DispatchQueue(label: "tello.videostream.listener", qos: .utility))
             } catch {
