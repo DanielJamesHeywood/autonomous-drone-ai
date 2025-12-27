@@ -2,6 +2,11 @@ import Network
 
 public class TelloVideoStream {
     
+    @usableFromInline
+    internal let _listener: NWListener
+    
     @inlinable
-    public init() {}
+    public init() throws {
+        _listener = try NWListener(using: .udp, on: 11111)
+    }
 }
