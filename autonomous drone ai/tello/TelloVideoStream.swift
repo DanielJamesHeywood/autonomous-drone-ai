@@ -7,6 +7,6 @@ public class TelloVideoStream {
     
     @inlinable
     public init() {
-        _stream = AsyncThrowingStream {}
+        _stream = AsyncThrowingStream { continuation in }
     }
 }
