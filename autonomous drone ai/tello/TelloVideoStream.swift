@@ -3,18 +3,10 @@ import Network
 public class TelloVideoStream {
     
     @usableFromInline
-    internal let _listener: NWListener
+    internal let _stream: AsyncThrowingStream<Any, Error>
     
     @inlinable
-    public init() throws {
-        _listener = try NWListener(using: .udp, on: 11111)
-        _listener.stateUpdateHandler = { state in }
-        _listener.newConnectionHandler = { connection in }
-        _listener.start(queue: DispatchQueue(label: "tello.videostream.listener", qos: .utility))
-    }
-    
-    @inlinable
-    deinit {
-        _listener.cancel()
+    public init() {
+        _stream = AsyncThrowingStream {}
     }
 }
