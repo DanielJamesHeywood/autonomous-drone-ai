@@ -17,7 +17,8 @@ public class TelloVideoStream {
                     case .ready: break
                     case .failed(_): break
                     case .cancelled: break
-                    @unknown default:
+                    @unknown
+                    default:
                         fatalError()
                     }
                 }
