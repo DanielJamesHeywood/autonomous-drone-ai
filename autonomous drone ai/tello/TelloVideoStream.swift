@@ -12,9 +12,7 @@ public class TelloVideoStream {
                 let listener = try NWListener(using: .udp, on: 11111)
                 listener.stateUpdateHandler = { state in
                     switch state {
-                    case .setup: break
-                    case .waiting(_): break
-                    case .ready: break
+                    case .setup, .waiting(_), .ready: break
                     case let .failed(error):
                         continuation.finish(throwing: error)
                     case .cancelled:
