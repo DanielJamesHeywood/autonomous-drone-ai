@@ -11,4 +11,9 @@ public class TelloVideoStream {
         _listener.newConnectionHandler = { _ in }
         _listener.start(queue: DispatchQueue(label: "tello.videostream.listener", qos: .utility))
     }
+    
+    @inlinable
+    deinit {
+        _listener.cancel()
+    }
 }
