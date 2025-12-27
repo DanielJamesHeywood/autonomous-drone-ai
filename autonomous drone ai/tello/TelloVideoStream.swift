@@ -17,7 +17,8 @@ public class TelloVideoStream {
                     case .ready: break
                     case let .failed(error):
                         continuation.finish(throwing: error)
-                    case .cancelled: break
+                    case .cancelled:
+                        continuation.finish()
                     @unknown
                     default:
                         fatalError()
