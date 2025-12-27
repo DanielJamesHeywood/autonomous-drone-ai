@@ -17,7 +17,8 @@ public class TelloVideoStream {
                     case .ready: break
                     case .failed(_): break
                     case .cancelled: break
-                    @unknown default: break
+                    @unknown default:
+                        fatalError()
                     }
                 }
                 listener.newConnectionHandler = { connection in }
