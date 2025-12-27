@@ -8,8 +8,8 @@ public class TelloVideoStream {
     @inlinable
     public init() throws {
         _listener = try NWListener(using: .udp, on: 11111)
-        _listener.stateUpdateHandler = { _ in }
-        _listener.newConnectionHandler = { _ in }
+        _listener.stateUpdateHandler = { state in }
+        _listener.newConnectionHandler = { connection in }
         _listener.start(queue: DispatchQueue(label: "tello.videostream.listener", qos: .utility))
     }
     
