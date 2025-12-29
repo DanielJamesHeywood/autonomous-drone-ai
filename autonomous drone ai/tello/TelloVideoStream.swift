@@ -1,6 +1,27 @@
 import Network
 
-public class TelloVideoStream {
+public struct TelloVideoStream: AsyncSequence {
+    
+    public struct Iterator: AsyncIteratorProtocol {
+        
+        @usableFromInline
+        internal var _iterator: AsyncThrowingStream<Any, Error>.Iterator
+        
+        @inlinable
+        internal init(_base: TelloVideoStream) {
+            _iterator = _base._stream.makeAsyncIterator()
+        }
+        
+        @inlinable
+        public mutating func next() async throws -> Any? {
+            return try await _iterator.next()
+        }
+        
+        @inlinable
+        public mutating func next(isolation actor: isolated (any Actor)?) async throws(Self.Failure) -> Any? {
+            return try await _iterator.next(isolation: actor)
+        }
+    }
     
     @usableFromInline
     internal let _stream: AsyncThrowingStream<Any, Error>
@@ -26,4 +47,7 @@ public class TelloVideoStream {
             }
         }
     }
+    
+    @inlinable
+    public func makeAsyncIterator() -> Iterator { Iterator(_base: self) }
 }
