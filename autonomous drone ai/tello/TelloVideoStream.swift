@@ -18,7 +18,7 @@ public struct TelloVideoStream: AsyncSequence {
         }
         
         @inlinable
-        public mutating func next(isolation actor: isolated (any Actor)?) async throws(Self.Failure) -> Any? {
+        public mutating func next(isolation actor: isolated Actor?) async throws -> Any? {
             return try await _iterator.next(isolation: actor)
         }
     }
