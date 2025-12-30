@@ -35,8 +35,6 @@ public struct TelloVideoStream: AsyncSequence {
                     switch state {
                     case let .failed(error):
                         continuation.finish(throwing: error)
-                    case .cancelled:
-                        continuation.finish()
                     default: break
                     }
                 }
