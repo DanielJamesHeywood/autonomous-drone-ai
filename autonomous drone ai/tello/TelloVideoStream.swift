@@ -36,7 +36,9 @@ public struct TelloVideoStream: AsyncSequence {
                         continuation.finish(throwing: error)
                     }
                 }
-                listener.newConnectionHandler = { connection in }
+                listener.newConnectionHandler = { connection in
+                    if case .hostPort(host: "192.168.10.1", port: _) = connection.endpoint {}
+                }
                 listener.start(queue: DispatchQueue(label: "tello.videostream.listener", qos: .utility))
             } catch {
                 continuation.finish(throwing: error)
