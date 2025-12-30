@@ -32,6 +32,9 @@ public struct TelloVideoStream: AsyncSequence {
             do {
                 let listener = try NWListener(using: .udp, on: 11111)
                 listener.stateUpdateHandler = { state in
+                    if case let .failed(error) = state {
+                        continuation.finish(throwing: error)
+                    }
                     switch state {
                     case let .failed(error):
                         continuation.finish(throwing: error)
