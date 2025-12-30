@@ -35,11 +35,6 @@ public struct TelloVideoStream: AsyncSequence {
                     if case let .failed(error) = state {
                         continuation.finish(throwing: error)
                     }
-                    switch state {
-                    case let .failed(error):
-                        continuation.finish(throwing: error)
-                    default: break
-                    }
                 }
                 listener.newConnectionHandler = { connection in }
                 listener.start(queue: DispatchQueue(label: "tello.videostream.listener", qos: .utility))
