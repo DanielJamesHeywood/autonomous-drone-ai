@@ -2,6 +2,8 @@ import Network
 
 public struct State {
     
+    public struct Iterator {}
+    
     @usableFromInline
     internal let _connection = NetworkConnection(
         to: .hostPort(host: "192.168.10.1", port: .any),
@@ -13,6 +15,8 @@ public struct State {
 }
 
 public struct VideoStream {
+    
+    public struct Iterator {}
     
     @usableFromInline
     internal let _connection = NetworkConnection(
