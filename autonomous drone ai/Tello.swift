@@ -33,6 +33,9 @@ public class Tello {
         using: .parameters { UDP() } .localPort(11111)
     )
     
+    @inlinable
+    internal init(_empty: ()) {}
+    
     public let state = State(_empty: ())
     
     public let videoStream = VideoStream(_empty: ())
