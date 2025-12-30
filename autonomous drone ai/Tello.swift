@@ -19,6 +19,9 @@ public class Tello {
     }
     
     @usableFromInline
+    internal let _connection = NetworkConnection(to: .hostPort(host: "192.168.10.1", port: 8889), using: { UDP() })
+    
+    @usableFromInline
     internal let _stateConnection = NetworkConnection(
         to: .hostPort(host: "192.168.10.1", port: .any),
         using: .parameters { UDP() } .localPort(8890)
