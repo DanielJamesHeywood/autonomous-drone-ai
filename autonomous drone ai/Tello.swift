@@ -2,7 +2,7 @@ import Network
 
 public let state = State(_empty: ())
 
-public class State {
+public struct State {
     
     @usableFromInline
     internal let _connection = NetworkConnection(
@@ -16,7 +16,7 @@ public class State {
 
 public let videoStream = VideoStream(_empty: ())
 
-public class VideoStream {
+public struct VideoStream {
     
     @usableFromInline
     internal let _connection = NetworkConnection(
