@@ -1,7 +1,5 @@
 import Network
 
-public let state = State(_empty: ())
-
 public struct State {
     
     @usableFromInline
@@ -14,8 +12,6 @@ public struct State {
     internal init(_empty: ()) {}
 }
 
-public let videoStream = VideoStream(_empty: ())
-
 public struct VideoStream {
     
     @usableFromInline
@@ -27,3 +23,7 @@ public struct VideoStream {
     @inlinable
     internal init(_empty: ()) {}
 }
+
+public let state = State(_empty: ())
+
+public let videoStream = VideoStream(_empty: ())
