@@ -6,12 +6,6 @@ public class Tello {
         
         public struct Iterator {}
         
-        @usableFromInline
-        internal let _connection = NetworkConnection(
-            to: .hostPort(host: "192.168.10.1", port: .any),
-            using: .parameters { UDP() } .localPort(8890)
-        )
-        
         @inlinable
         internal init(_empty: ()) {}
     }
@@ -20,15 +14,21 @@ public class Tello {
         
         public struct Iterator {}
         
-        @usableFromInline
-        internal let _connection = NetworkConnection(
-            to: .hostPort(host: "192.168.10.1", port: .any),
-            using: .parameters { UDP() } .localPort(11111)
-        )
-        
         @inlinable
         internal init(_empty: ()) {}
     }
+    
+    @usableFromInline
+    internal let _stateConnection = NetworkConnection(
+        to: .hostPort(host: "192.168.10.1", port: .any),
+        using: .parameters { UDP() } .localPort(8890)
+    )
+    
+    @usableFromInline
+    internal let _videoStreamConnection = NetworkConnection(
+        to: .hostPort(host: "192.168.10.1", port: .any),
+        using: .parameters { UDP() } .localPort(11111)
+    )
     
     public let state = State(_empty: ())
     
