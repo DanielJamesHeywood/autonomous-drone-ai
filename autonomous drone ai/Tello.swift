@@ -41,7 +41,6 @@ public class Tello {
     public let state = State(_empty: ())
     
     public let videoStream = VideoStream(_empty: ())
-    
 }
 
 public let tello = Tello(_empty: ())
