@@ -2,6 +2,11 @@ import Foundation
 import Network
 import VideoToolbox
 
+public enum TelloError: Error {
+    case receivedError
+    case receivedInvalidResponse
+}
+
 public class Tello {
     
     public struct State {
@@ -41,6 +46,14 @@ public class Tello {
     @inlinable
     public func command() async throws {
         try await _connection.send("command".data(using: .utf8).unsafelyUnwrapped)
+        switch try await _connection.receive().content {
+        case "ok".data(using: .utf8).unsafelyUnwrapped:
+            break
+        case "error".data(using: .utf8).unsafelyUnwrapped:
+            throw TelloError.receivedError
+        default:
+            throw TelloError.receivedInvalidResponse
+        }
     }
     
     public let state = State(_empty: ())
