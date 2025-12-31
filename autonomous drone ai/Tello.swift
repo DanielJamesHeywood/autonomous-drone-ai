@@ -81,6 +81,19 @@ public class Tello {
             throw TelloError.receivedInvalidResponse
         }
     }
+    
+    @inlinable
+    public func streamOff() async throws {
+        try await _connection.send("streamoff".data(using: .utf8).unsafelyUnwrapped)
+        switch try await _connection.receive().content {
+        case "ok".data(using: .utf8).unsafelyUnwrapped:
+            break
+        case "error".data(using: .utf8).unsafelyUnwrapped:
+            throw TelloError.receivedError
+        default:
+            throw TelloError.receivedInvalidResponse
+        }
+    }
 }
 
 public let tello = Tello(_empty: ())
