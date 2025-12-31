@@ -24,6 +24,9 @@ public class Tello {
         using: .parameters { UDP() } .localPort(11111)
     )
     
+    @usableFromInline
+    internal var _videoStreamDecompressionSession: VTDecompressionSession?
+    
     @inlinable
     internal init(_empty: ()) {}
     
