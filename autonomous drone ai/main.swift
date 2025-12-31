@@ -1,1 +1,1 @@
-
+try await tello.command()

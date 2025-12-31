@@ -38,6 +38,11 @@ public class Tello {
     @inlinable
     internal init(_empty: ()) {}
     
+    @inlinable
+    public func command() async throws {
+        try await _connection.send("command".data(using: .utf8).unsafelyUnwrapped)
+    }
+    
     public let state = State(_empty: ())
     
     public let videoStream = VideoStream(_empty: ())
