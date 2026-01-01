@@ -222,9 +222,9 @@ public class Tello {
     
     @inlinable
     public func go(_ x: Int, _ y: Int, _ z: Int, _ speed: Int) async throws {
-        precondition((-500...500).contains(x))
-        precondition((-500...500).contains(y))
-        precondition((-500...500).contains(z))
+        precondition(x.magnitude <= 500)
+        precondition(y.magnitude <= 500)
+        precondition(z.magnitude <= 500)
         precondition((10...100).contains(speed))
         precondition(!((-20...20).contains(x) && (-20...20).contains(y) && (-20...20).contains(z)))
         try await _connection.send("go \(x) \(y) \(z) \(speed)".data(using: .utf8).unsafelyUnwrapped)
