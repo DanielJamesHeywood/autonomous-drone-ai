@@ -193,6 +193,34 @@ public class Tello {
     }
     
     @inlinable
+    public func clockwise(_ x: Int) async throws {
+        precondition((1...360).contains(x))
+        try await _connection.send("cw \(x)".data(using: .utf8).unsafelyUnwrapped)
+        switch try await _connection.receive().content {
+        case "ok".data(using: .utf8).unsafelyUnwrapped:
+            break
+        case "error".data(using: .utf8).unsafelyUnwrapped:
+            throw TelloError.receivedError
+        default:
+            throw TelloError.receivedInvalidResponse
+        }
+    }
+    
+    @inlinable
+    public func counterclockwise(_ x: Int) async throws {
+        precondition((1...360).contains(x))
+        try await _connection.send("ccw \(x)".data(using: .utf8).unsafelyUnwrapped)
+        switch try await _connection.receive().content {
+        case "ok".data(using: .utf8).unsafelyUnwrapped:
+            break
+        case "error".data(using: .utf8).unsafelyUnwrapped:
+            throw TelloError.receivedError
+        default:
+            throw TelloError.receivedInvalidResponse
+        }
+    }
+    
+    @inlinable
     public func stop() async throws {
         try await _connection.send("stop".data(using: .utf8).unsafelyUnwrapped)
         switch try await _connection.receive().content {
