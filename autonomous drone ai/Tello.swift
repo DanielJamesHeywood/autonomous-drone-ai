@@ -351,6 +351,16 @@ public class Tello {
         }
         return time
     }
+    
+    @inlinable
+    public var state: AsyncThrowingStream<Any, Swift.Error> {
+        return AsyncThrowingStream { continuation in }
+    }
+    
+    @inlinable
+    public var videoStream: AsyncThrowingStream<Any, Swift.Error> {
+        return AsyncThrowingStream { continuation in }
+    }
 }
 
 public let tello = Tello(_empty: ())
