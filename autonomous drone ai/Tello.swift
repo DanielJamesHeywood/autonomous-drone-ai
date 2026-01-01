@@ -333,6 +333,18 @@ public class Tello {
         }
         return x
     }
+    
+    @inlinable
+    public func time() async throws -> Int {
+        try await _connection.send("time?".data(using: .utf8).unsafelyUnwrapped)
+        guard let response = try await String(data: _connection.receive().content, encoding: .utf8) else {
+            throw TelloError.receivedInvalidResponse
+        }
+        guard let time = Int(response) else {
+            throw TelloError.receivedInvalidResponse
+        }
+        return time
+    }
 }
 
 public let tello = Tello(_empty: ())
