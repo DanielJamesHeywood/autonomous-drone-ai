@@ -228,7 +228,7 @@ public class Tello {
     
     @inlinable
     public func flip(_ x: Direction) async throws {
-        try await _connection.send("flip \(x)".data(using: .utf8).unsafelyUnwrapped)
+        try await _connection.send("flip \(x.rawValue)".data(using: .utf8).unsafelyUnwrapped)
         switch try await _connection.receive().content {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
