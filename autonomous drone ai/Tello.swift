@@ -340,7 +340,7 @@ public class Tello {
         guard let response = try await String(data: _connection.receive().content, encoding: .utf8) else {
             throw TelloError.receivedInvalidResponse
         }
-        guard let time = Int(response) else {
+        guard let time = Int(response), time >= 0 else {
             throw TelloError.receivedInvalidResponse
         }
         return time
