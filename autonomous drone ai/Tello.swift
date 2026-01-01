@@ -307,6 +307,18 @@ public class Tello {
         }
         return x
     }
+    
+    @inlinable
+    public func battery() async throws -> Int {
+        try await _connection.send("battery?".data(using: .utf8).unsafelyUnwrapped)
+        guard let response = try await String(data: _connection.receive().content, encoding: .utf8) else {
+            throw TelloError.receivedInvalidResponse
+        }
+        guard let x = Int(response), (0...100).contains(x) else {
+            throw TelloError.receivedInvalidResponse
+        }
+        return x
+    }
 }
 
 public let tello = Tello(_empty: ())
