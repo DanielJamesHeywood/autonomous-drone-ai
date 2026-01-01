@@ -251,6 +251,30 @@ public class Tello {
             throw TelloError.receivedInvalidResponse
         }
     }
+    
+    @inlinable
+    public func curve(_ xyz1: (Int, Int, Int), _ xyz2: (Int, Int, Int), speed: Int) async throws {
+        let (x1, y1, z1) = xyz1
+        let (x2, y2, z2) = xyz2
+        precondition(x1.magnitude <= 500)
+        precondition(y1.magnitude <= 500)
+        precondition(z1.magnitude <= 500)
+        precondition(x2.magnitude <= 500)
+        precondition(y2.magnitude <= 500)
+        precondition(z2.magnitude <= 500)
+        precondition((10...60).contains(speed))
+        precondition(!(x1.magnitude < 20 && y1.magnitude < 20 && z1.magnitude < 20))
+        precondition(!(x2.magnitude < 20 && y2.magnitude < 20 && z2.magnitude < 20))
+        try await _connection.send("curve \(x1) \(y1) \(z1) \(x2) \(y2) \(z2) \(speed)".data(using: .utf8).unsafelyUnwrapped)
+        switch try await _connection.receive().content {
+        case "ok".data(using: .utf8).unsafelyUnwrapped:
+            break
+        case "error".data(using: .utf8).unsafelyUnwrapped:
+            throw TelloError.receivedError
+        default:
+            throw TelloError.receivedInvalidResponse
+        }
+    }
 }
 
 public let tello = Tello(_empty: ())
