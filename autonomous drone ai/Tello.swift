@@ -37,6 +37,13 @@ public class Tello {
     internal init(_empty: ()) {}
     
     @inlinable
+    deinit {
+        if let _videoStreamDecompressionSession {
+            VTDecompressionSessionInvalidate(_videoStreamDecompressionSession)
+        }
+    }
+    
+    @inlinable
     public func command() async throws {
         try await _connection.send("command".data(using: .utf8).unsafelyUnwrapped)
         switch try await _connection.receive().content {
