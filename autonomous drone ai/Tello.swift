@@ -109,6 +109,19 @@ public class Tello {
     }
     
     @inlinable
+    public func up(_ x: Int) async throws {
+        try await _connection.send("up \(x)".data(using: .utf8).unsafelyUnwrapped)
+        switch try await _connection.receive().content {
+        case "ok".data(using: .utf8).unsafelyUnwrapped:
+            break
+        case "error".data(using: .utf8).unsafelyUnwrapped:
+            throw TelloError.receivedError
+        default:
+            throw TelloError.receivedInvalidResponse
+        }
+    }
+    
+    @inlinable
     public func stop() async throws {
         try await _connection.send("stop".data(using: .utf8).unsafelyUnwrapped)
         switch try await _connection.receive().content {
