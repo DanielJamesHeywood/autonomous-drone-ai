@@ -110,6 +110,7 @@ public class Tello {
     
     @inlinable
     public func up(_ x: Int) async throws {
+        precondition((20...500).contains(x))
         try await _connection.send("up \(x)".data(using: .utf8).unsafelyUnwrapped)
         switch try await _connection.receive().content {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
