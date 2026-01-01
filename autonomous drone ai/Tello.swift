@@ -8,6 +8,13 @@ public class Tello {
         case receivedInvalidResponse
     }
     
+    public enum Direction: String {
+        case left = "l"
+        case right = "r"
+        case forward = "f"
+        case back = "b"
+    }
+    
     @usableFromInline
     internal let _connection = NetworkConnection(to: .hostPort(host: "192.168.10.1", port: 8889), using: { UDP() })
     
@@ -217,13 +224,6 @@ public class Tello {
         default:
             throw Error.receivedInvalidResponse
         }
-    }
-    
-    public enum Direction: String {
-        case left = "l"
-        case right = "r"
-        case forward = "f"
-        case back = "b"
     }
     
     @inlinable
