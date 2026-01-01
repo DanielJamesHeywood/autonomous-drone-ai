@@ -226,7 +226,7 @@ public class Tello {
         precondition(y.magnitude <= 500)
         precondition(z.magnitude <= 500)
         precondition((10...100).contains(speed))
-        precondition(!((-20...20).contains(x) && (-20...20).contains(y) && (-20...20).contains(z)))
+        precondition(!(x.magnitude < 20 && y.magnitude < 20 && z.magnitude < 20))
         try await _connection.send("go \(x) \(y) \(z) \(speed)".data(using: .utf8).unsafelyUnwrapped)
         switch try await _connection.receive().content {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
