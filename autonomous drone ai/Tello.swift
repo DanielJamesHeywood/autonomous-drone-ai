@@ -221,7 +221,7 @@ public class Tello {
     }
     
     @inlinable
-    public func go(_ x: Int, _ y: Int, _ z: Int, _ speed: Int) async throws {
+    public func go(_ x: Int, _ y: Int, _ z: Int, speed: Int) async throws {
         precondition(x.magnitude <= 500)
         precondition(y.magnitude <= 500)
         precondition(z.magnitude <= 500)
