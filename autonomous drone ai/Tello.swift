@@ -295,6 +295,18 @@ public class Tello {
             throw TelloError.receivedInvalidResponse
         }
     }
+    
+    @inlinable
+    public func speed() async throws -> Int {
+        try await _connection.send("speed?".data(using: .utf8).unsafelyUnwrapped)
+        guard let response = try await String(data: _connection.receive().content, encoding: .utf8) else {
+            throw TelloError.receivedInvalidResponse
+        }
+        guard let x = Int(response), (10...100).contains(x) else {
+            throw TelloError.receivedInvalidResponse
+        }
+        return x
+    }
 }
 
 public let tello = Tello(_empty: ())
