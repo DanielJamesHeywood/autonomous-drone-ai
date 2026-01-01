@@ -2,12 +2,12 @@ import Foundation
 import Network
 import VideoToolbox
 
-public enum TelloError: Error {
-    case receivedErrorResponse
-    case receivedInvalidResponse
-}
-
 public class Tello {
+    
+    public enum Error: Swift.Error {
+        case receivedErrorResponse
+        case receivedInvalidResponse
+    }
     
     @usableFromInline
     internal let _connection = NetworkConnection(to: .hostPort(host: "192.168.10.1", port: 8889), using: { UDP() })
@@ -37,9 +37,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -50,9 +50,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -63,9 +63,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -76,9 +76,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -89,9 +89,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -102,9 +102,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -116,9 +116,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -130,9 +130,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -144,9 +144,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -158,9 +158,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -172,9 +172,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -186,9 +186,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -200,9 +200,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -214,9 +214,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -234,9 +234,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -253,9 +253,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -266,9 +266,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -290,9 +290,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -304,9 +304,9 @@ public class Tello {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw TelloError.receivedErrorResponse
+            throw Error.receivedErrorResponse
         default:
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
     }
     
@@ -314,10 +314,10 @@ public class Tello {
     public func speed() async throws -> Int {
         try await _connection.send("speed?".data(using: .utf8).unsafelyUnwrapped)
         guard let response = try await String(data: _connection.receive().content, encoding: .utf8) else {
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
         guard let x = Int(response), (10...100).contains(x) else {
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
         return x
     }
@@ -326,10 +326,10 @@ public class Tello {
     public func battery() async throws -> Int {
         try await _connection.send("battery?".data(using: .utf8).unsafelyUnwrapped)
         guard let response = try await String(data: _connection.receive().content, encoding: .utf8) else {
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
         guard let x = Int(response), (0...100).contains(x) else {
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
         return x
     }
@@ -338,10 +338,10 @@ public class Tello {
     public func time() async throws -> Int {
         try await _connection.send("time?".data(using: .utf8).unsafelyUnwrapped)
         guard let response = try await String(data: _connection.receive().content, encoding: .utf8) else {
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
         guard let time = Int(response), time >= 0 else {
-            throw TelloError.receivedInvalidResponse
+            throw Error.receivedInvalidResponse
         }
         return time
     }
