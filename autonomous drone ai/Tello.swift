@@ -220,6 +220,26 @@ public class Tello {
         }
     }
     
+    public enum Direction: String {
+        case left = "l"
+        case right = "r"
+        case forward = "f"
+        case back = "b"
+    }
+    
+    @inlinable
+    public func flip(_ x: Direction) async throws {
+        try await _connection.send("flip \(x)".data(using: .utf8).unsafelyUnwrapped)
+        switch try await _connection.receive().content {
+        case "ok".data(using: .utf8).unsafelyUnwrapped:
+            break
+        case "error".data(using: .utf8).unsafelyUnwrapped:
+            throw TelloError.receivedError
+        default:
+            throw TelloError.receivedInvalidResponse
+        }
+    }
+    
     @inlinable
     public func go(_ xyz: (Int, Int, Int), speed: Int) async throws {
         let (x, y, z) = xyz
