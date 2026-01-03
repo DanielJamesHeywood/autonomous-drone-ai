@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct AutonomousDroneAIApp: App {
+internal struct AutonomousDroneAIApp: App {
     
-    var body: some Scene { WindowGroup { ContentView() } }
+    internal var body: some Scene { WindowGroup { ContentView() } }
 }
