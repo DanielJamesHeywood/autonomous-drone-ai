@@ -10,6 +10,8 @@ struct AutonomousDroneAIView: NSViewRepresentable {
     }
 
     func updateNSView(_ view: MTKView, context: Context) {}
-    
-    func makeCoordinator() -> AutonomousDroneAIViewDelegate { AutonomousDroneAIViewDelegate() }
+
+    func makeCoordinator() -> AutonomousDroneAIViewDelegate {
+        AutonomousDroneAIViewDelegate()
+    }
 }
