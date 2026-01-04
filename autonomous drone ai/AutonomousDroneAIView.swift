@@ -8,5 +8,5 @@ struct AutonomousDroneAIView: NSViewRepresentable {
         return view
     }
 
-    func updateNSView(_ nsView: MTKView, context: Context) {}
+    func updateNSView(_ view: MTKView, context: Context) {}
 }
