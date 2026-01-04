@@ -1,9 +1,9 @@
 import SwiftUI
 import MetalKit
 
-struct ContentView: NSViewRepresentable {
+internal struct ContentView: NSViewRepresentable {
     
-    func makeNSView(context: Context) -> MTKView { MTKView() }
+    internal func makeNSView(context: Context) -> MTKView { MTKView() }
     
-    func updateNSView(_ nsView: MTKView, context: Context) {}
+    internal func updateNSView(_ nsView: MTKView, context: Context) {}
 }
