@@ -2,10 +2,11 @@ import MetalKit
 
 class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
 
+    let device = MTLCreateSystemDefaultDevice()
+
     let commandQueue: MTL4CommandQueue?
 
     override init() {
-        let device = MTLCreateSystemDefaultDevice()
         commandQueue = device?.makeMTL4CommandQueue()
     }
 
