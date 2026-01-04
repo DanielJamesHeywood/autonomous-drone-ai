@@ -1,7 +1,7 @@
 import SwiftUI
 import MetalKit
 
-struct ContentView: NSViewRepresentable {
+struct AutonomousDroneAIView: NSViewRepresentable {
 
     func makeNSView(context: Context) -> MTKView {
         let view = MTKView()

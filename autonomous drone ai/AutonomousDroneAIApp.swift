@@ -5,7 +5,7 @@ struct AutonomousDroneAIApp: App {
 
     var body: some Scene {
         Window("Autonomous Drone AI", id: "autonomousDroneAI") {
-            ContentView()
+            AutonomousDroneAIView()
         }
     }
 }
