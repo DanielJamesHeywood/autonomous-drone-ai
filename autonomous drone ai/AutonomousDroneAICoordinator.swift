@@ -1,6 +1,6 @@
 import MetalKit
 
-class AutonomousDroneAIViewDelegate: NSObject, MTKViewDelegate {
+class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
 
