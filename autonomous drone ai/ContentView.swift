@@ -1,13 +1,9 @@
 import SwiftUI
+import MetalKit
 
-struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
+struct ContentView: NSViewRepresentable {
+    
+    func makeNSView(context: Context) -> MTKView { MTKView() }
+    
+    func updateNSView(_ nsView: MTKView, context: Context) {}
 }
