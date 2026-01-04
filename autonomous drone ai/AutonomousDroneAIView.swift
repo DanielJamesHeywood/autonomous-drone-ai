@@ -1,5 +1,5 @@
-import SwiftUI
 import MetalKit
+import SwiftUI
 
 struct AutonomousDroneAIView: NSViewRepresentable {
 
