@@ -14,14 +14,14 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         
         init?() {
             let device = MTLCreateSystemDefaultDevice()
-            guard let _commandQueue = device?.makeMTL4CommandQueue() else { return nil }
-            commandQueue = _commandQueue
-            guard let _commandBuffer = device?.makeCommandBuffer() else { return nil }
-            commandBuffer = _commandBuffer
-            guard let _commandAllocator = device?.makeCommandAllocator() else { return nil }
-            commandAllocator = _commandAllocator
-            guard let _sharedEvent = device?.makeSharedEvent() else { return nil }
-            sharedEvent = _sharedEvent
+            guard let commandQueue = device?.makeMTL4CommandQueue() else { return nil }
+            self.commandQueue = commandQueue
+            guard let commandBuffer = device?.makeCommandBuffer() else { return nil }
+            self.commandBuffer = commandBuffer
+            guard let commandAllocator = device?.makeCommandAllocator() else { return nil }
+            self.commandAllocator = commandAllocator
+            guard let sharedEvent = device?.makeSharedEvent() else { return nil }
+            self.sharedEvent = sharedEvent
         }
     }
 
