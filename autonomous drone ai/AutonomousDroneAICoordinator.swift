@@ -8,20 +8,20 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
 
     let commandAllocator: MTL4CommandAllocator?
 
-    let event: MTLEvent?
+    let sharedEvent: MTLSharedEvent?
 
     override init() {
         let device = MTLCreateSystemDefaultDevice()
         commandQueue = device?.makeMTL4CommandQueue()
         commandBuffer = device?.makeCommandBuffer()
         commandAllocator = device?.makeCommandAllocator()
-        event = device?.makeEvent()
+        sharedEvent = device?.makeSharedEvent()
     }
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
 
     func draw(in view: MTKView) {
-        guard let commandQueue, let commandBuffer, let commandAllocator, let event else { return }
+        guard let commandQueue, let commandBuffer, let commandAllocator, let sharedEvent else { return }
         guard let drawable = view.currentDrawable else { return }
         commandAllocator.reset()
         commandBuffer.beginCommandBuffer(allocator: commandAllocator)
