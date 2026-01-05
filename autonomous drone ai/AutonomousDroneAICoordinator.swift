@@ -8,11 +8,14 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
 
     let commandAllocator: MTL4CommandAllocator?
 
+    let event: MTLEvent?
+
     override init() {
         let device = MTLCreateSystemDefaultDevice()
         commandQueue = device?.makeMTL4CommandQueue()
         commandBuffer = device?.makeCommandBuffer()
         commandAllocator = device?.makeCommandAllocator()
+        event = device?.makeEvent()
     }
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
