@@ -19,6 +19,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
 
     func draw(in view: MTKView) {
         guard let commandQueue, let commandBuffer, let commandAllocator, let drawable = view.currentDrawable else { return }
+        commandAllocator.reset()
         commandBuffer.beginCommandBuffer(allocator: commandAllocator)
         commandBuffer.endCommandBuffer()
         commandQueue.waitForDrawable(drawable)
