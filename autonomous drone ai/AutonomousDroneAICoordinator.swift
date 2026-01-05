@@ -18,11 +18,12 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
 
     func draw(in view: MTKView) {
-        guard let commandQueue, let commandBuffer, let commandAllocator else { return }
+        guard let commandQueue, let commandBuffer, let commandAllocator, let drawable = view.currentDrawable else { return }
         commandBuffer.beginCommandBuffer(allocator: commandAllocator)
         commandBuffer.endCommandBuffer()
+        commandQueue.waitForDrawable(drawable)
         commandQueue.commit([commandBuffer])
-        guard let drawable = view.currentDrawable else { return }
+        commandQueue.signalDrawable(drawable)
         drawable.present()
     }
 }
