@@ -18,8 +18,12 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             self.commandQueue = commandQueue
             guard let commandBuffer = device.makeCommandBuffer() else { return nil }
             self.commandBuffer = commandBuffer
-            guard let commandAllocator = device.makeCommandAllocator() else { return nil }
-            commandAllocators = [commandAllocator]
+            var commandAllocators = [] as [MTL4CommandAllocator]
+            for _ in 0..<3 {
+                guard let commandAllocator = device.makeCommandAllocator() else { return nil }
+                commandAllocators.append(commandAllocator)
+            }
+            self.commandAllocators = commandAllocators
             guard let sharedEvent = device.makeSharedEvent() else { return nil }
             self.sharedEvent = sharedEvent
         }
