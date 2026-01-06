@@ -2,7 +2,9 @@ import MetalKit
 
 class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
 
-    struct State {
+    class State {
+
+        var frameNumber = 0 as UInt64
 
         let commandQueue: MTL4CommandQueue
 
@@ -35,13 +37,18 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
 
     func draw(in view: MTKView) {
         guard let state, let drawable = view.currentDrawable else { return }
-        let commandAllocator = state.commandAllocators[0]
-        commandAllocator.reset()
+        let commandAllocator = state.commandAllocators[Int(state.frameNumber % 3)]
+        if state.frameNumber >= 3 {
+            state.sharedEvent.wait(untilSignaledValue: state.frameNumber - 3, timeoutMS: 10)
+            commandAllocator.reset()
+        }
         state.commandBuffer.beginCommandBuffer(allocator: commandAllocator)
         state.commandBuffer.endCommandBuffer()
         state.commandQueue.waitForDrawable(drawable)
         state.commandQueue.commit([state.commandBuffer])
         state.commandQueue.signalDrawable(drawable)
+        state.commandQueue.signalEvent(state.sharedEvent, value: state.frameNumber)
+        state.frameNumber += 1
         drawable.present()
     }
 }
