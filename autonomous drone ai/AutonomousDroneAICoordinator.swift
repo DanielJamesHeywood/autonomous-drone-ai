@@ -37,8 +37,8 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
 
     func draw(in view: MTKView) {
         guard let state else { return }
-        guard let drawable = view.currentDrawable else { return }
         guard let renderPassDescriptor = view.currentMTL4RenderPassDescriptor else { return }
+        guard let drawable = view.currentDrawable else { return }
         let commandAllocator = state.commandAllocators[Int(state.frameNumber % 3)]
         if state.frameNumber >= 3 {
             state.sharedEvent.wait(untilSignaledValue: state.frameNumber - 3, timeoutMS: 10)
