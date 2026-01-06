@@ -5,13 +5,13 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     struct State {
 
         let commandQueue: MTL4CommandQueue
-        
+
         let commandBuffer: MTL4CommandBuffer
-        
+
         let commandAllocators: [MTL4CommandAllocator]
-        
+
         let sharedEvent: MTLSharedEvent
-        
+
         init?() {
             guard let device = MTLCreateSystemDefaultDevice() else { return nil }
             guard let commandQueue = device.makeMTL4CommandQueue() else { return nil }
