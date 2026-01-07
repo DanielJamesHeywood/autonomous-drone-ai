@@ -14,6 +14,8 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
 
         let sharedEvent: MTLSharedEvent
 
+        var viewport: MTLViewport?
+
         init?() {
             guard let device = MTLCreateSystemDefaultDevice() else {
                 return nil
@@ -43,7 +45,9 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
 
     let state = State()
 
-    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
+    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+        state?.viewport = MTLViewport(originX: 0, originY: 0, width: size.width, height: size.height, znear: 0, zfar: 1)
+    }
 
     func draw(in view: MTKView) {
         guard let state else {
