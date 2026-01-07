@@ -45,6 +45,10 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             commandAllocator.reset()
         }
         state.commandBuffer.beginCommandBuffer(allocator: commandAllocator)
+        guard let renderCommandEncoder = state.commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else {
+            return
+        }
+        renderCommandEncoder.endEncoding()
         state.commandBuffer.endCommandBuffer()
         state.commandQueue.waitForDrawable(drawable)
         state.commandQueue.commit([state.commandBuffer])
