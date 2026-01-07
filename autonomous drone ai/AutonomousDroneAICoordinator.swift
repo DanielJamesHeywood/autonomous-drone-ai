@@ -4,8 +4,6 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
 
     class State {
 
-        var frameNumber = 0 as UInt64
-
         let commandQueue: MTL4CommandQueue
 
         let commandBuffer: MTL4CommandBuffer
@@ -15,6 +13,8 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         let sharedEvent: MTLSharedEvent
 
         var viewport: MTLViewport?
+
+        var frameNumber = 0 as UInt64
 
         init?() {
             guard let device = MTLCreateSystemDefaultDevice() else {
