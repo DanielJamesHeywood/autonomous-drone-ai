@@ -28,12 +28,15 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             self.commandBuffer = commandBuffer
             var commandAllocators = [] as [MTL4CommandAllocator]
             repeat {
-                guard let commandAllocator = device.makeCommandAllocator()
-                else { return nil }
+                guard let commandAllocator = device.makeCommandAllocator() else {
+                    return nil
+                }
                 commandAllocators.append(commandAllocator)
             } while commandAllocators.count < 3
             self.commandAllocators = commandAllocators
-            guard let sharedEvent = device.makeSharedEvent() else { return nil }
+            guard let sharedEvent = device.makeSharedEvent() else {
+                return nil
+            }
             self.sharedEvent = sharedEvent
         }
     }
@@ -43,36 +46,32 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
 
     func draw(in view: MTKView) {
-        guard let state else { return }
-        guard let renderPassDescriptor = view.currentMTL4RenderPassDescriptor
-        else { return }
-        guard let drawable = view.currentDrawable else { return }
-        let commandAllocator = state.commandAllocators[
-            Int(state.frameNumber % 3)
-        ]
+        guard let state else {
+            return
+        }
+        guard let renderPassDescriptor = view.currentMTL4RenderPassDescriptor else {
+            return
+        }
+        guard let drawable = view.currentDrawable else {
+            return
+        }
+        let commandAllocator = state.commandAllocators[Int(state.frameNumber % 3)]
         if state.frameNumber >= 3 {
-            guard
-                state.sharedEvent.wait(
-                    untilSignaledValue: state.frameNumber - 3,
-                    timeoutMS: 1000
-                )
-            else { return }
+            guard state.sharedEvent.wait(untilSignaledValue: state.frameNumber - 3, timeoutMS: 1000) else {
+                return
+            }
             commandAllocator.reset()
         }
         state.commandBuffer.beginCommandBuffer(allocator: commandAllocator)
-        guard
-            let renderCommandEncoder = state.commandBuffer
-                .makeRenderCommandEncoder(descriptor: renderPassDescriptor)
-        else { return }
+        guard let renderCommandEncoder = state.commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else {
+            return
+        }
         renderCommandEncoder.endEncoding()
         state.commandBuffer.endCommandBuffer()
         state.commandQueue.waitForDrawable(drawable)
         state.commandQueue.commit([state.commandBuffer])
         state.commandQueue.signalDrawable(drawable)
-        state.commandQueue.signalEvent(
-            state.sharedEvent,
-            value: state.frameNumber
-        )
+        state.commandQueue.signalEvent(state.sharedEvent, value: state.frameNumber)
         state.frameNumber += 1
         drawable.present()
     }
