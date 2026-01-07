@@ -10,6 +10,8 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
 
         let commandAllocators: [MTL4CommandAllocator]
 
+        let renderPipelineState: MTLRenderPipelineState
+
         let depthStencilState: MTLDepthStencilState
 
         let sharedEvent: MTLSharedEvent
@@ -30,6 +32,8 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             self.commandAllocators = commandAllocators
             guard let sharedEvent = device?.makeSharedEvent() else { return nil }
             self.sharedEvent = sharedEvent
+            guard let renderPipelineState = try? device?.makeRenderPipelineState(descriptor: MTLRenderPipelineDescriptor()) else { return nil }
+            self.renderPipelineState = renderPipelineState
             let depthStencilDescriptor = MTLDepthStencilDescriptor()
             depthStencilDescriptor.depthCompareFunction = .less
             guard let depthStencilState = device?.makeDepthStencilState(descriptor: depthStencilDescriptor) else { return nil }
@@ -52,6 +56,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         }
         state.commandBuffer.beginCommandBuffer(allocator: commandAllocator)
         guard let renderCommandEncoder = state.commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
+        renderCommandEncoder.setRenderPipelineState(state.renderPipelineState)
         renderCommandEncoder.setDepthStencilState(state.depthStencilState)
         renderCommandEncoder.setViewport(MTLViewport(originX: 0, originY: 0, width: view.drawableSize.width, height: view.drawableSize.height, znear: 0, zfar: 1))
         renderCommandEncoder.endEncoding()
