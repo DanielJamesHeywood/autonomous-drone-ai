@@ -12,7 +12,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
 
         let sharedEvent: MTLSharedEvent
 
-        var viewport: MTLViewport?
+        var viewport = nil as MTLViewport?
 
         var frameNumber = 0 as UInt64
 
