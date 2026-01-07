@@ -30,7 +30,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             self.commandAllocators = commandAllocators
             guard let sharedEvent = device?.makeSharedEvent() else { return nil }
             self.sharedEvent = sharedEvent
-            guard let depthStencilState = device?.makeDepthStencilState(descriptor: MTLDepthStencilDescriptor()) else { return }
+            guard let depthStencilState = device?.makeDepthStencilState(descriptor: MTLDepthStencilDescriptor()) else { return nil }
             self.depthStencilState = depthStencilState
         }
     }
