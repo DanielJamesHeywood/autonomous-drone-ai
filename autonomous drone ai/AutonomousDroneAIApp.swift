@@ -7,9 +7,7 @@ struct AutonomousDroneAIApp: App {
         Window(
             "Autonomous Drone AI",
             id: "autonomousDroneAI",
-            content: {
-                AutonomousDroneAIView()
-            }
+            content: { AutonomousDroneAIView() }
         )
     }
 }
