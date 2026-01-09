@@ -1,23 +1,23 @@
 import MetalKit
 
 class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
-
+    
     class State {
-
+        
         let commandQueue: MTL4CommandQueue
-
+        
         let commandBuffer: MTL4CommandBuffer
-
+        
         let commandAllocators: [MTL4CommandAllocator]
-
+        
         let renderPipelineState: MTLRenderPipelineState
-
+        
         let depthStencilState: MTLDepthStencilState
-
+        
         let sharedEvent: MTLSharedEvent
-
+        
         var frameNumber = 0 as UInt64
-
+        
         init?() {
             let device = MTLCreateSystemDefaultDevice()
             guard let commandQueue = device?.makeMTL4CommandQueue() else { return nil }
@@ -40,11 +40,11 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             self.depthStencilState = depthStencilState
         }
     }
-
+    
     let state = State()
-
+    
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
-
+    
     func draw(in view: MTKView) {
         guard let state else { return }
         guard let renderPassDescriptor = view.currentMTL4RenderPassDescriptor else { return }
