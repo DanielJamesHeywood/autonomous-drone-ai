@@ -2,7 +2,7 @@ import MetalKit
 
 class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     
-    class State {
+    class Context {
         
         let commandQueue: MTL4CommandQueue
         
@@ -41,31 +41,31 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         }
     }
     
-    let state = try? State()
+    let context = try? Context()
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
     
     func draw(in view: MTKView) {
-        guard let state else { return }
+        guard let context else { return }
         guard let renderPassDescriptor = view.currentMTL4RenderPassDescriptor else { return }
         guard let drawable = view.currentDrawable else { return }
-        let commandAllocator = state.commandAllocators[Int(state.frameNumber % 3)]
-        if state.frameNumber >= 3 {
-            guard state.sharedEvent.wait(untilSignaledValue: state.frameNumber - 3, timeoutMS: 1000) else { return }
+        let commandAllocator = context.commandAllocators[Int(context.frameNumber % 3)]
+        if context.frameNumber >= 3 {
+            guard context.sharedEvent.wait(untilSignaledValue: context.frameNumber - 3, timeoutMS: 1000) else { return }
             commandAllocator.reset()
         }
-        state.commandBuffer.beginCommandBuffer(allocator: commandAllocator)
-        guard let renderCommandEncoder = state.commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
-        renderCommandEncoder.setRenderPipelineState(state.renderPipelineState)
-        renderCommandEncoder.setDepthStencilState(state.depthStencilState)
+        context.commandBuffer.beginCommandBuffer(allocator: commandAllocator)
+        guard let renderCommandEncoder = context.commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
+        renderCommandEncoder.setRenderPipelineState(context.renderPipelineState)
+        renderCommandEncoder.setDepthStencilState(context.depthStencilState)
         renderCommandEncoder.setViewport(MTLViewport(originX: 0, originY: 0, width: view.drawableSize.width, height: view.drawableSize.height, znear: 0, zfar: 1))
         renderCommandEncoder.endEncoding()
-        state.commandBuffer.endCommandBuffer()
-        state.commandQueue.waitForDrawable(drawable)
-        state.commandQueue.commit([state.commandBuffer])
-        state.commandQueue.signalDrawable(drawable)
-        state.commandQueue.signalEvent(state.sharedEvent, value: state.frameNumber)
-        state.frameNumber += 1
+        context.commandBuffer.endCommandBuffer()
+        context.commandQueue.waitForDrawable(drawable)
+        context.commandQueue.commit([context.commandBuffer])
+        context.commandQueue.signalDrawable(drawable)
+        context.commandQueue.signalEvent(context.sharedEvent, value: context.frameNumber)
+        context.frameNumber += 1
         drawable.present()
     }
 }
