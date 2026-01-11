@@ -6,6 +6,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         
         enum Error: Swift.Error {
         case failedToMakeCommandQueue
+        case failedToMakeCommandBuffer
         }
         
         let commandQueue: MTL4CommandQueue
@@ -24,9 +25,8 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         
         init?() throws {
             commandQueue = try Context.makeCommandQueue()
+            commandBuffer = try Context.makeCommandBuffer()
             guard let device = MTLCreateSystemDefaultDevice() else { return nil }
-            guard let commandBuffer = device.makeCommandBuffer() else { return nil }
-            self.commandBuffer = commandBuffer
             var commandAllocators = [] as [MTL4CommandAllocator]
             repeat {
                 guard let commandAllocator = device.makeCommandAllocator() else { return nil }
@@ -48,6 +48,13 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
                 throw Error.failedToMakeCommandQueue
             }
             return commandQueue
+        }
+        
+        static func makeCommandBuffer() throws -> MTL4CommandBuffer {
+            guard let commandBuffer = MTLCreateSystemDefaultDevice()?.makeCommandBuffer() else {
+                throw Error.failedToMakeCommandBuffer
+            }
+            return commandBuffer
         }
     }
     
