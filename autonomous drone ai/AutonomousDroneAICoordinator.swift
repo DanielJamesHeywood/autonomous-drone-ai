@@ -54,9 +54,12 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         }
         
         static func makeCommandAllocators() throws -> [MTL4CommandAllocator] {
+            guard let device = MTLCreateSystemDefaultDevice() else {
+                throw Error.failedToMakeCommandAllocators
+            }
             var commandAllocators = [] as [MTL4CommandAllocator]
             repeat {
-                guard let commandAllocator = MTLCreateSystemDefaultDevice()?.makeCommandAllocator() else {
+                guard let commandAllocator = device.makeCommandAllocator() else {
                     throw Error.failedToMakeCommandAllocators
                 }
                 commandAllocators.append(commandAllocator)
