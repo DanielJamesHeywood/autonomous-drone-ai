@@ -19,24 +19,24 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         var frameNumber = 0 as UInt64
         
         init?() {
-            let device = MTLCreateSystemDefaultDevice()
-            guard let commandQueue = device?.makeMTL4CommandQueue() else { return nil }
+            guard let device = MTLCreateSystemDefaultDevice() else { return nil }
+            guard let commandQueue = device.makeMTL4CommandQueue() else { return nil }
             self.commandQueue = commandQueue
-            guard let commandBuffer = device?.makeCommandBuffer() else { return nil }
+            guard let commandBuffer = device.makeCommandBuffer() else { return nil }
             self.commandBuffer = commandBuffer
             var commandAllocators = [] as [MTL4CommandAllocator]
             repeat {
-                guard let commandAllocator = device?.makeCommandAllocator() else { return nil }
+                guard let commandAllocator = device.makeCommandAllocator() else { return nil }
                 commandAllocators.append(commandAllocator)
             } while commandAllocators.count < 3
             self.commandAllocators = commandAllocators
-            guard let sharedEvent = device?.makeSharedEvent() else { return nil }
+            guard let sharedEvent = device.makeSharedEvent() else { return nil }
             self.sharedEvent = sharedEvent
-            guard let renderPipelineState = try? device?.makeRenderPipelineState(descriptor: MTLRenderPipelineDescriptor()) else { return nil }
+            guard let renderPipelineState = try? device.makeRenderPipelineState(descriptor: MTLRenderPipelineDescriptor()) else { return nil }
             self.renderPipelineState = renderPipelineState
             let depthStencilDescriptor = MTLDepthStencilDescriptor()
             depthStencilDescriptor.depthCompareFunction = .less
-            guard let depthStencilState = device?.makeDepthStencilState(descriptor: depthStencilDescriptor) else { return nil }
+            guard let depthStencilState = device.makeDepthStencilState(descriptor: depthStencilDescriptor) else { return nil }
             self.depthStencilState = depthStencilState
         }
     }
