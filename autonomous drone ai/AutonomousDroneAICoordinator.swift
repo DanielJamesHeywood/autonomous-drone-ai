@@ -8,6 +8,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         case failedToMakeCommandQueue
         case failedToMakeCommandBuffer
         case failedToMakeCommandAllocator
+        case failedToMakeRenderPipelineState
         case failedToMakeDepthStencilState
         case failedToMakeSharedEvent
         }
@@ -26,15 +27,13 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         
         var frameNumber = 0 as UInt64
         
-        init?() throws {
+        init() throws {
             commandQueue = try Context.makeCommandQueue()
             commandBuffer = try Context.makeCommandBuffer()
             commandAllocators = try Context.makeCommandAllocators()
+            renderPipelineState = try Context.makeRenderPipelineState()
             depthStencilState = try Context.makeDepthStencilState()
             sharedEvent = try Context.makeSharedEvent()
-            guard let device = MTLCreateSystemDefaultDevice() else { return nil }
-            guard let renderPipelineState = try? device.makeRenderPipelineState(descriptor: MTLRenderPipelineDescriptor()) else { return nil }
-            self.renderPipelineState = renderPipelineState
         }
         
         static func makeCommandQueue() throws -> MTL4CommandQueue {
@@ -64,6 +63,13 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
                 throw Error.failedToMakeCommandAllocator
             }
             return commandAllocator
+        }
+        
+        static func makeRenderPipelineState() throws -> MTLRenderPipelineState {
+            guard let renderPipelineState = try MTLCreateSystemDefaultDevice()?.makeRenderPipelineState(descriptor: MTLRenderPipelineDescriptor()) else {
+                throw Error.failedToMakeSharedEvent
+            }
+            return renderPipelineState
         }
         
         static func makeDepthStencilState() throws -> MTLDepthStencilState {
