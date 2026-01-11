@@ -4,15 +4,6 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     
     class Context {
         
-        enum Error: Swift.Error {
-        case failedToMakeCommandQueue
-        case failedToMakeCommandBuffer
-        case failedToMakeCommandAllocator
-        case failedToMakeRenderPipelineState
-        case failedToMakeDepthStencilState
-        case failedToMakeSharedEvent
-        }
-        
         let commandQueue: MTL4CommandQueue
         
         let commandBuffer: MTL4CommandBuffer
@@ -27,66 +18,66 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         
         var frameNumber = 0 as UInt64
         
-        init() throws {
-            commandQueue = try Context.makeCommandQueue()
-            commandBuffer = try Context.makeCommandBuffer()
-            commandAllocators = try Context.makeCommandAllocators()
-            renderPipelineState = try Context.makeRenderPipelineState()
-            depthStencilState = try Context.makeDepthStencilState()
-            sharedEvent = try Context.makeSharedEvent()
+        init() {
+            commandQueue = Context.makeCommandQueue()
+            commandBuffer = Context.makeCommandBuffer()
+            commandAllocators = Context.makeCommandAllocators()
+            renderPipelineState = Context.makeRenderPipelineState()
+            depthStencilState = Context.makeDepthStencilState()
+            sharedEvent = Context.makeSharedEvent()
         }
         
-        static func makeCommandQueue() throws -> MTL4CommandQueue {
+        static func makeCommandQueue() -> MTL4CommandQueue {
             guard let commandQueue = MTLCreateSystemDefaultDevice()?.makeMTL4CommandQueue() else {
-                throw Error.failedToMakeCommandQueue
+                fatalError()
             }
             return commandQueue
         }
         
-        static func makeCommandBuffer() throws -> MTL4CommandBuffer {
+        static func makeCommandBuffer() -> MTL4CommandBuffer {
             guard let commandBuffer = MTLCreateSystemDefaultDevice()?.makeCommandBuffer() else {
-                throw Error.failedToMakeCommandBuffer
+                fatalError()
             }
             return commandBuffer
         }
         
-        static func makeCommandAllocators() throws -> [MTL4CommandAllocator] {
+        static func makeCommandAllocators() -> [MTL4CommandAllocator] {
             var commandAllocators = [] as [MTL4CommandAllocator]
             repeat {
-                commandAllocators.append(try Context.makeCommandAllocator())
+                commandAllocators.append(Context.makeCommandAllocator())
             } while commandAllocators.count < 3
             return commandAllocators
         }
         
-        static func makeCommandAllocator() throws -> MTL4CommandAllocator {
+        static func makeCommandAllocator() -> MTL4CommandAllocator {
             guard let commandAllocator = MTLCreateSystemDefaultDevice()?.makeCommandAllocator() else {
-                throw Error.failedToMakeCommandAllocator
+                fatalError()
             }
             return commandAllocator
         }
         
-        static func makeRenderPipelineState() throws -> MTLRenderPipelineState {
-            throw Error.failedToMakeRenderPipelineState
+        static func makeRenderPipelineState() -> MTLRenderPipelineState {
+            fatalError()
         }
         
-        static func makeDepthStencilState() throws -> MTLDepthStencilState {
+        static func makeDepthStencilState() -> MTLDepthStencilState {
             let descriptor = MTLDepthStencilDescriptor()
             descriptor.depthCompareFunction = .less
             guard let depthStencilState = MTLCreateSystemDefaultDevice()?.makeDepthStencilState(descriptor: descriptor) else {
-                throw Error.failedToMakeDepthStencilState
+                fatalError()
             }
             return depthStencilState
         }
         
-        static func makeSharedEvent() throws -> MTLSharedEvent {
+        static func makeSharedEvent() -> MTLSharedEvent {
             guard let sharedEvent = MTLCreateSystemDefaultDevice()?.makeSharedEvent() else {
-                throw Error.failedToMakeSharedEvent
+                fatalError()
             }
             return sharedEvent
         }
     }
     
-    let context = try? Context()
+    let context = Context()
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
     
