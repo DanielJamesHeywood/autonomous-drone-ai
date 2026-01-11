@@ -4,6 +4,10 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     
     class Context {
         
+        enum Error: Swift.Error {
+        case failedToMakeCommandQueue
+        }
+        
         let commandQueue: MTL4CommandQueue
         
         let commandBuffer: MTL4CommandBuffer
@@ -19,9 +23,8 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         var frameNumber = 0 as UInt64
         
         init?() throws {
+            commandQueue = try Context.makeCommandQueue()
             guard let device = MTLCreateSystemDefaultDevice() else { return nil }
-            guard let commandQueue = device.makeMTL4CommandQueue() else { return nil }
-            self.commandQueue = commandQueue
             guard let commandBuffer = device.makeCommandBuffer() else { return nil }
             self.commandBuffer = commandBuffer
             var commandAllocators = [] as [MTL4CommandAllocator]
@@ -38,6 +41,13 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             depthStencilDescriptor.depthCompareFunction = .less
             guard let depthStencilState = device.makeDepthStencilState(descriptor: depthStencilDescriptor) else { return nil }
             self.depthStencilState = depthStencilState
+        }
+        
+        static func makeCommandQueue() throws -> MTL4CommandQueue {
+            guard let commandQueue = MTLCreateSystemDefaultDevice()?.makeMTL4CommandQueue() else {
+                throw Error.failedToMakeCommandQueue
+            }
+            return commandQueue
         }
     }
     
