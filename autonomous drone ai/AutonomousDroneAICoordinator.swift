@@ -18,7 +18,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         
         var frameNumber = 0 as UInt64
         
-        init?() {
+        init?() throws {
             guard let device = MTLCreateSystemDefaultDevice() else { return nil }
             guard let commandQueue = device.makeMTL4CommandQueue() else { return nil }
             self.commandQueue = commandQueue
@@ -41,7 +41,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         }
     }
     
-    let state = State()
+    let state = try? State()
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
     
