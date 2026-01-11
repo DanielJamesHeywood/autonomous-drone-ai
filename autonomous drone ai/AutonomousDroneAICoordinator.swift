@@ -7,6 +7,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         enum Error: Swift.Error {
         case failedToMakeCommandQueue
         case failedToMakeCommandBuffer
+        case failedToMakeCommandAllocators
         }
         
         let commandQueue: MTL4CommandQueue
@@ -26,13 +27,8 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         init?() throws {
             commandQueue = try Context.makeCommandQueue()
             commandBuffer = try Context.makeCommandBuffer()
+            commandAllocators = try Context.makeCommandAllocators()
             guard let device = MTLCreateSystemDefaultDevice() else { return nil }
-            var commandAllocators = [] as [MTL4CommandAllocator]
-            repeat {
-                guard let commandAllocator = device.makeCommandAllocator() else { return nil }
-                commandAllocators.append(commandAllocator)
-            } while commandAllocators.count < 3
-            self.commandAllocators = commandAllocators
             guard let sharedEvent = device.makeSharedEvent() else { return nil }
             self.sharedEvent = sharedEvent
             guard let renderPipelineState = try? device.makeRenderPipelineState(descriptor: MTLRenderPipelineDescriptor()) else { return nil }
@@ -55,6 +51,17 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
                 throw Error.failedToMakeCommandBuffer
             }
             return commandBuffer
+        }
+        
+        static func makeCommandAllocators() throws -> [MTL4CommandAllocator] {
+            var commandAllocators = [] as [MTL4CommandAllocator]
+            repeat {
+                guard let commandAllocator = MTLCreateSystemDefaultDevice()?.makeCommandAllocator() else {
+                    throw Error.failedToMakeCommandAllocators
+                }
+                commandAllocators.append(commandAllocator)
+            } while commandAllocators.count < 3
+            return commandAllocators
         }
     }
     
