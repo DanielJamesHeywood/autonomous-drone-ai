@@ -8,6 +8,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         case failedToMakeCommandQueue
         case failedToMakeCommandBuffer
         case failedToMakeCommandAllocator
+        case failedToMakeDepthStencilState
         case failedToMakeSharedEvent
         }
         
@@ -29,14 +30,11 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             commandQueue = try Context.makeCommandQueue()
             commandBuffer = try Context.makeCommandBuffer()
             commandAllocators = try Context.makeCommandAllocators()
+            depthStencilState = try Context.makeDepthStencilState()
             sharedEvent = try Context.makeSharedEvent()
             guard let device = MTLCreateSystemDefaultDevice() else { return nil }
             guard let renderPipelineState = try? device.makeRenderPipelineState(descriptor: MTLRenderPipelineDescriptor()) else { return nil }
             self.renderPipelineState = renderPipelineState
-            let depthStencilDescriptor = MTLDepthStencilDescriptor()
-            depthStencilDescriptor.depthCompareFunction = .less
-            guard let depthStencilState = device.makeDepthStencilState(descriptor: depthStencilDescriptor) else { return nil }
-            self.depthStencilState = depthStencilState
         }
         
         static func makeCommandQueue() throws -> MTL4CommandQueue {
@@ -66,6 +64,15 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
                 throw Error.failedToMakeCommandAllocator
             }
             return commandAllocator
+        }
+        
+        static func makeDepthStencilState() throws -> MTLDepthStencilState {
+            let descriptor = MTLDepthStencilDescriptor()
+            descriptor.depthCompareFunction = .less
+            guard let depthStencilState = MTLCreateSystemDefaultDevice()?.makeDepthStencilState(descriptor: descriptor) else {
+                throw Error.failedToMakeSharedEvent
+            }
+            return depthStencilState
         }
         
         static func makeSharedEvent() throws -> MTLSharedEvent {
