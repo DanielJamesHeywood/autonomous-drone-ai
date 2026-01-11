@@ -66,17 +66,14 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         }
         
         static func makeRenderPipelineState() throws -> MTLRenderPipelineState {
-            guard let renderPipelineState = try MTLCreateSystemDefaultDevice()?.makeRenderPipelineState(descriptor: MTLRenderPipelineDescriptor()) else {
-                throw Error.failedToMakeSharedEvent
-            }
-            return renderPipelineState
+            throw Error.failedToMakeRenderPipelineState
         }
         
         static func makeDepthStencilState() throws -> MTLDepthStencilState {
             let descriptor = MTLDepthStencilDescriptor()
             descriptor.depthCompareFunction = .less
             guard let depthStencilState = MTLCreateSystemDefaultDevice()?.makeDepthStencilState(descriptor: descriptor) else {
-                throw Error.failedToMakeSharedEvent
+                throw Error.failedToMakeDepthStencilState
             }
             return depthStencilState
         }
