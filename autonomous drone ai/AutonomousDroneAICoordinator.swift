@@ -31,16 +31,9 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         static func makeCommandAllocators() -> [MTL4CommandAllocator] {
             var commandAllocators = [] as [MTL4CommandAllocator]
             repeat {
-                commandAllocators.append(Context.makeCommandAllocator())
+                commandAllocators.append(MTLCreateSystemDefaultDevice()!.makeCommandAllocator()!)
             } while commandAllocators.count < 3
             return commandAllocators
-        }
-        
-        static func makeCommandAllocator() -> MTL4CommandAllocator {
-            guard let commandAllocator = MTLCreateSystemDefaultDevice()?.makeCommandAllocator() else {
-                fatalError()
-            }
-            return commandAllocator
         }
         
         static func makeRenderPipelineState() -> MTLRenderPipelineState {
