@@ -4,11 +4,6 @@ import SwiftUI
 @main
 struct AutonomousDroneAIApp: App {
     
-    enum Error: Swift.Error {
-        case receivedErrorResponse
-        case receivedInvalidResponse
-    }
-    
     let task = Task(
         priority: .utility,
         operation: {
