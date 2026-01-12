@@ -39,10 +39,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         static func makeDepthStencilState() -> MTLDepthStencilState {
             let descriptor = MTLDepthStencilDescriptor()
             descriptor.depthCompareFunction = .less
-            guard let depthStencilState = MTLCreateSystemDefaultDevice()?.makeDepthStencilState(descriptor: descriptor) else {
-                fatalError()
-            }
-            return depthStencilState
+            return MTLCreateSystemDefaultDevice()!.makeDepthStencilState(descriptor: descriptor)!
         }
     }
     
