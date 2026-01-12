@@ -3,7 +3,7 @@ import Network
 
 actor Tello {
     
-    public enum Error: Swift.Error {
+    enum Error: Swift.Error {
         case receivedErrorResponse
         case receivedInvalidResponse
     }
