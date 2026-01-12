@@ -12,66 +12,35 @@ actor Tello {
     
     func command() async throws {
         try await connection.send("command".data(using: .utf8).unsafelyUnwrapped)
-        switch try await connection.receive().content {
-        case "ok".data(using: .utf8).unsafelyUnwrapped:
-            break
-        case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw Error.receivedErrorResponse
-        default:
-            throw Error.receivedInvalidResponse
-        }
+        try await receiveResponse()
     }
     
     func takeoff() async throws {
         try await connection.send("takeoff".data(using: .utf8).unsafelyUnwrapped)
-        switch try await connection.receive().content {
-        case "ok".data(using: .utf8).unsafelyUnwrapped:
-            break
-        case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw Error.receivedErrorResponse
-        default:
-            throw Error.receivedInvalidResponse
-        }
+        try await receiveResponse()
     }
     
     func land() async throws {
         try await connection.send("land".data(using: .utf8).unsafelyUnwrapped)
-        switch try await connection.receive().content {
-        case "ok".data(using: .utf8).unsafelyUnwrapped:
-            break
-        case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw Error.receivedErrorResponse
-        default:
-            throw Error.receivedInvalidResponse
-        }
+        try await receiveResponse()
     }
     
     func streamOn() async throws {
         try await connection.send("streamon".data(using: .utf8).unsafelyUnwrapped)
-        switch try await connection.receive().content {
-        case "ok".data(using: .utf8).unsafelyUnwrapped:
-            break
-        case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw Error.receivedErrorResponse
-        default:
-            throw Error.receivedInvalidResponse
-        }
+        try await receiveResponse()
     }
     
     func streamOff() async throws {
         try await connection.send("streamoff".data(using: .utf8).unsafelyUnwrapped)
-        switch try await connection.receive().content {
-        case "ok".data(using: .utf8).unsafelyUnwrapped:
-            break
-        case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw Error.receivedErrorResponse
-        default:
-            throw Error.receivedInvalidResponse
-        }
+        try await receiveResponse()
     }
     
     func emergency() async throws {
         try await connection.send("emergency".data(using: .utf8).unsafelyUnwrapped)
+        try await receiveResponse()
+    }
+    
+    func receiveResponse() async throws {
         switch try await connection.receive().content {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
