@@ -25,7 +25,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             commandAllocators = Context.makeCommandAllocators()
             renderPipelineState = Context.makeRenderPipelineState()
             depthStencilState = Context.makeDepthStencilState()
-            sharedEvent = Context.makeSharedEvent()
+            sharedEvent = device.makeSharedEvent()!
         }
         
         static func makeCommandAllocators() -> [MTL4CommandAllocator] {
@@ -47,13 +47,6 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
                 fatalError()
             }
             return depthStencilState
-        }
-        
-        static func makeSharedEvent() -> MTLSharedEvent {
-            guard let sharedEvent = MTLCreateSystemDefaultDevice()?.makeSharedEvent() else {
-                fatalError()
-            }
-            return sharedEvent
         }
     }
     
