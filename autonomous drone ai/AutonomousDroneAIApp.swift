@@ -1,4 +1,3 @@
-import Network
 import SwiftUI
 
 @main
