@@ -6,7 +6,7 @@ struct AutonomousDroneAIApp: App {
     let sendCommandsAndReceiveResponses = Task(
         priority: .utility,
         operation: {
-            try await tello.command()
+            try await Tello().command()
         }
     )
     
