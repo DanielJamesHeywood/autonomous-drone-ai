@@ -3,7 +3,7 @@ import SwiftUI
 @main
 struct AutonomousDroneAIApp: App {
     
-    let task = Task(
+    let sendCommandsAndReceiveResponses = Task(
         priority: .utility,
         operation: {
             try await tello.command()
