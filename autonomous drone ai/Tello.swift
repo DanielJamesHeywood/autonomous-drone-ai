@@ -34,7 +34,7 @@ actor Tello {
         try await sendCommandAndReceiveResponse("emergency")
     }
     
-    func remoteControllerControl(_ a: Int, _ b: Int, _ c: Int, _ d: Int) async throws {
+    func remoteControl(_ a: Int, _ b: Int, _ c: Int, _ d: Int) async throws {
         precondition(a.magnitude <= 100)
         precondition(b.magnitude <= 100)
         precondition(c.magnitude <= 100)
