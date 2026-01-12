@@ -28,9 +28,9 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             } while commandAllocators.count < 3
             self.commandAllocators = commandAllocators
             self.renderPipelineState = Context.makeRenderPipelineState()
-            let descriptor = MTLDepthStencilDescriptor()
-            descriptor.depthCompareFunction = .less
-            self.depthStencilState = device.makeDepthStencilState(descriptor: descriptor)!
+            let depthStencilDescriptor = MTLDepthStencilDescriptor()
+            depthStencilDescriptor.depthCompareFunction = .less
+            self.depthStencilState = device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
             self.sharedEvent = device.makeSharedEvent()!
         }
         
