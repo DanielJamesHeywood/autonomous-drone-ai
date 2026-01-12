@@ -1,7 +1,7 @@
 import Foundation
 import Network
 
-class Tello {
+actor Tello {
     
     public enum Error: Swift.Error {
         case receivedErrorResponse
