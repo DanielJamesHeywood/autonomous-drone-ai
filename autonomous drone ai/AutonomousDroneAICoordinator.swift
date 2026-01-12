@@ -19,19 +19,12 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         var frameNumber = 0 as UInt64
         
         init() {
-            commandQueue = Context.makeCommandQueue()
+            commandQueue = MTLCreateSystemDefaultDevice()!.makeMTL4CommandQueue()!
             commandBuffer = Context.makeCommandBuffer()
             commandAllocators = Context.makeCommandAllocators()
             renderPipelineState = Context.makeRenderPipelineState()
             depthStencilState = Context.makeDepthStencilState()
             sharedEvent = Context.makeSharedEvent()
-        }
-        
-        static func makeCommandQueue() -> MTL4CommandQueue {
-            guard let commandQueue = MTLCreateSystemDefaultDevice()?.makeMTL4CommandQueue() else {
-                fatalError()
-            }
-            return commandQueue
         }
         
         static func makeCommandBuffer() -> MTL4CommandBuffer {
