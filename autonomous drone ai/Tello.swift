@@ -8,30 +8,30 @@ actor Tello {
         case receivedInvalidResponse
     }
     
-    let connection = NetworkConnection(to: .hostPort(host: "192.168.10.1", port: 8889), using: { UDP() })
+    let _connection = NetworkConnection(to: .hostPort(host: "192.168.10.1", port: 8889), using: { UDP() })
     
     func command() async throws {
-        try await sendCommandAndReceiveResponse("command")
+        try await _sendCommandAndReceiveResponse("command")
     }
     
     func takeoff() async throws {
-        try await sendCommandAndReceiveResponse("takeoff")
+        try await _sendCommandAndReceiveResponse("takeoff")
     }
     
     func land() async throws {
-        try await sendCommandAndReceiveResponse("land")
+        try await _sendCommandAndReceiveResponse("land")
     }
     
     func streamOn() async throws {
-        try await sendCommandAndReceiveResponse("streamon")
+        try await _sendCommandAndReceiveResponse("streamon")
     }
     
     func streamOff() async throws {
-        try await sendCommandAndReceiveResponse("streamoff")
+        try await _sendCommandAndReceiveResponse("streamoff")
     }
     
     func emergency() async throws {
-        try await sendCommandAndReceiveResponse("emergency")
+        try await _sendCommandAndReceiveResponse("emergency")
     }
     
     func remoteControl(_ a: Int, _ b: Int, _ c: Int, _ d: Int) async throws {
@@ -39,23 +39,23 @@ actor Tello {
         precondition(b.magnitude <= 100)
         precondition(c.magnitude <= 100)
         precondition(d.magnitude <= 100)
-        try await sendCommandAndReceiveResponse("rc \(a) \(b) \(c) \(d)")
+        try await _sendCommandAndReceiveResponse("rc \(a) \(b) \(c) \(d)")
     }
     
-    func sendCommandAndReceiveResponse(_ command: String) async throws {
-        try await sendCommand(command)
-        try await receiveResponse()
+    func _sendCommandAndReceiveResponse(_ command: String) async throws {
+        try await _sendCommand(command)
+        try await _receiveResponse()
     }
     
-    func sendCommand(_ command: String) async throws {
+    func _sendCommand(_ command: String) async throws {
         guard let command = command.data(using: .utf8) else {
             preconditionFailure()
         }
-        try await connection.send(command)
+        try await _connection.send(command)
     }
     
-    func receiveResponse() async throws {
-        switch try await connection.receive().content {
+    func _receiveResponse() async throws {
+        switch try await _connection.receive().content {
         case "ok".data(using: .utf8).unsafelyUnwrapped:
             break
         case "error".data(using: .utf8).unsafelyUnwrapped:
@@ -65,5 +65,3 @@ actor Tello {
         }
     }
 }
-
-let tello = Tello()
