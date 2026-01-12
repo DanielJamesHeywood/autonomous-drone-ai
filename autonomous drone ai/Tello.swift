@@ -69,6 +69,18 @@ class Tello {
             throw Error.receivedInvalidResponse
         }
     }
+    
+    func emergency() async throws {
+        try await connection.send("emergency".data(using: .utf8).unsafelyUnwrapped)
+        switch try await connection.receive().content {
+        case "ok".data(using: .utf8).unsafelyUnwrapped:
+            break
+        case "error".data(using: .utf8).unsafelyUnwrapped:
+            throw Error.receivedErrorResponse
+        default:
+            throw Error.receivedInvalidResponse
+        }
+    }
 }
 
 let tello = Tello()
