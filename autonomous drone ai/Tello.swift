@@ -11,33 +11,40 @@ actor Tello {
     let connection = NetworkConnection(to: .hostPort(host: "192.168.10.1", port: 8889), using: { UDP() })
     
     func command() async throws {
-        try await connection.send("command".data(using: .utf8).unsafelyUnwrapped)
+        try await sendCommand("command")
         try await receiveResponse()
     }
     
     func takeoff() async throws {
-        try await connection.send("takeoff".data(using: .utf8).unsafelyUnwrapped)
+        try await sendCommand("takeoff")
         try await receiveResponse()
     }
     
     func land() async throws {
-        try await connection.send("land".data(using: .utf8).unsafelyUnwrapped)
+        try await sendCommand("land")
         try await receiveResponse()
     }
     
     func streamOn() async throws {
-        try await connection.send("streamon".data(using: .utf8).unsafelyUnwrapped)
+        try await sendCommand("streamon")
         try await receiveResponse()
     }
     
     func streamOff() async throws {
-        try await connection.send("streamoff".data(using: .utf8).unsafelyUnwrapped)
+        try await sendCommand("streamoff")
         try await receiveResponse()
     }
     
     func emergency() async throws {
-        try await connection.send("emergency".data(using: .utf8).unsafelyUnwrapped)
+        try await sendCommand("emergency")
         try await receiveResponse()
+    }
+    
+    func sendCommand(_ command: String) async throws {
+        guard let command = command.data(using: .utf8) else {
+            preconditionFailure()
+        }
+        try await connection.send(command)
     }
     
     func receiveResponse() async throws {
