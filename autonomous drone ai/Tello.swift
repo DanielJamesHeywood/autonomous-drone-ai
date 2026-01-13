@@ -27,10 +27,6 @@ actor Tello {
         try await _sendCommandAndReceiveResponse("streamon")
     }
     
-    func streamOff() async throws {
-        try await _sendCommandAndReceiveResponse("streamoff")
-    }
-    
     func emergency() async throws {
         try await _sendCommand("emergency")
     }
