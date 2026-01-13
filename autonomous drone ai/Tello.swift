@@ -40,7 +40,7 @@ actor Tello {
         precondition(b.magnitude <= 100)
         precondition(c.magnitude <= 100)
         precondition(d.magnitude <= 100)
-        try await _sendCommandAndReceiveResponse("rc \(a) \(b) \(c) \(d)")
+        try await _sendCommand("rc \(a) \(b) \(c) \(d)")
     }
     
     func _sendCommandAndReceiveResponse(_ command: String) async throws {
