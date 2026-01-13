@@ -6,6 +6,7 @@ actor Tello {
     enum Error: Swift.Error {
         case receivedErrorResponse
         case receivedInvalidResponse
+        case receivedNoResponse
     }
     
     let _connection = NetworkConnection(to: .hostPort(host: "192.168.10.1", port: 8889), using: { UDP() })
@@ -72,7 +73,7 @@ actor Tello {
                 group.addTask(
                     operation: {
                         try await Task.sleep(for: .seconds(1))
-                        throw Error.receivedInvalidResponse
+                        throw Error.receivedNoResponse
                     }
                 )
                 try await group.next()
