@@ -77,6 +77,7 @@ actor Tello {
                     }
                 )
                 try await group.next()
+                group.cancelAll()
             }
         )
     }
