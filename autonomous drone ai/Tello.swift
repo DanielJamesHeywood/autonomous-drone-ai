@@ -16,11 +16,11 @@ actor Tello {
     }
     
     func takeoff() async throws {
-        try await _sendCommandAndReceiveResponse("takeoff", retrying: false)
+        try await _sendCommandAndReceiveResponse("takeoff")
     }
     
     func land() async throws {
-        try await _sendCommandAndReceiveResponse("land", retrying: false)
+        try await _sendCommandAndReceiveResponse("land")
     }
     
     func streamOn() async throws {
@@ -39,7 +39,7 @@ actor Tello {
         try await _sendCommand("rc \(a) \(b) \(c) \(d)")
     }
     
-    func _sendCommandAndReceiveResponse(_ command: String, retrying: Bool) async throws {
+    func _sendCommandAndReceiveResponse(_ command: String, retrying: Bool = false) async throws {
         try await _sendCommand(command)
         try await _receiveResponse()
     }
