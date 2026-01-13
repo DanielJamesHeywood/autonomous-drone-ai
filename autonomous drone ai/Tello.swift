@@ -32,7 +32,7 @@ actor Tello {
     }
     
     func emergency() async throws {
-        try await _sendCommandAndReceiveResponse("emergency")
+        try await _sendCommand("emergency")
     }
     
     func remoteControl(_ a: Int, _ b: Int, _ c: Int, _ d: Int) async throws {
