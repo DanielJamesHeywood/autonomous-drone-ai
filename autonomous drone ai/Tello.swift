@@ -12,19 +12,19 @@ actor Tello {
     let _connection = NetworkConnection(to: .hostPort(host: "192.168.10.1", port: 8889), using: { UDP() })
     
     func command() async throws {
-        try await _sendCommandAndReceiveResponse("command")
+        try await _sendCommandAndReceiveResponse("command", retrying: true)
     }
     
     func takeoff() async throws {
-        try await _sendCommandAndReceiveResponse("takeoff")
+        try await _sendCommandAndReceiveResponse("takeoff", retrying: false)
     }
     
     func land() async throws {
-        try await _sendCommandAndReceiveResponse("land")
+        try await _sendCommandAndReceiveResponse("land", retrying: false)
     }
     
     func streamOn() async throws {
-        try await _sendCommandAndReceiveResponse("streamon")
+        try await _sendCommandAndReceiveResponse("streamon", retrying: true)
     }
     
     func emergency() async throws {
@@ -39,17 +39,7 @@ actor Tello {
         try await _sendCommand("rc \(a) \(b) \(c) \(d)")
     }
     
-    func _sendCommandAndReceiveResponseRetrying(_ command: String) async throws {
-        do {
-            try await _sendCommandAndReceiveResponse(command)
-        } catch Error.receivedErrorResponse {
-            throw Error.receivedErrorResponse
-        } catch {
-            try await _sendCommandAndReceiveResponseRetrying(command)
-        }
-    }
-    
-    func _sendCommandAndReceiveResponse(_ command: String) async throws {
+    func _sendCommandAndReceiveResponse(_ command: String, retrying: Bool) async throws {
         try await _sendCommand(command)
         try await _receiveResponse()
     }
