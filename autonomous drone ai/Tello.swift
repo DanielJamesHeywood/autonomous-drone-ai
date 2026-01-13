@@ -39,6 +39,16 @@ actor Tello {
         try await _sendCommand("rc \(a) \(b) \(c) \(d)")
     }
     
+    func _sendCommandAndReceiveResponseRetrying(_ command: String) async throws {
+        do {
+            try await _sendCommandAndReceiveResponse(command)
+        } catch Error.receivedInvalidResponse, Error.receivedNoResponse {
+            try await _sendCommandAndReceiveResponseRetrying(command)
+        } catch {
+            throw error
+        }
+    }
+    
     func _sendCommandAndReceiveResponse(_ command: String) async throws {
         try await _sendCommand(command)
         try await _receiveResponse()
