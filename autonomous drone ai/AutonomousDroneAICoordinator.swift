@@ -37,10 +37,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
     
     func draw(in view: MTKView) {
-        guard let renderPassDescriptor = view.currentMTL4RenderPassDescriptor else {
-            return
-        }
-        guard let drawable = view.currentDrawable else {
+        guard let renderPassDescriptor = view.currentMTL4RenderPassDescriptor, let drawable = view.currentDrawable else {
             return
         }
         let commandAllocator = commandAllocators[Int(frameNumber % 3)]
