@@ -42,10 +42,10 @@ actor Tello {
     func _sendCommandAndReceiveResponseRetrying(_ command: String) async throws {
         do {
             try await _sendCommandAndReceiveResponse(command)
-        } catch Error.receivedInvalidResponse, Error.receivedNoResponse {
-            try await _sendCommandAndReceiveResponseRetrying(command)
+        } catch Error.receivedErrorResponse {
+            throw Error.receivedErrorResponse
         } catch {
-            throw error
+            try await _sendCommandAndReceiveResponseRetrying(command)
         }
     }
     
