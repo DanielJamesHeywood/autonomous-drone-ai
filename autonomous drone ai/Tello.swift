@@ -62,7 +62,7 @@ actor Tello {
                     operation: { [self] in
                         switch try await _connection.receive().content {
                         case "ok".data(using: .utf8).unsafelyUnwrapped:
-                            break
+                            return
                         case "error".data(using: .utf8).unsafelyUnwrapped:
                             throw Error.receivedErrorResponse
                         default:
