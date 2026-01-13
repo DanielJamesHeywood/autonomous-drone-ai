@@ -55,13 +55,28 @@ actor Tello {
     }
     
     func _receiveResponse() async throws {
-        switch try await _connection.receive().content {
-        case "ok".data(using: .utf8).unsafelyUnwrapped:
-            break
-        case "error".data(using: .utf8).unsafelyUnwrapped:
-            throw Error.receivedErrorResponse
-        default:
-            throw Error.receivedInvalidResponse
-        }
+        try await withThrowingTaskGroup(
+            body: { group in
+                group.addTask(
+                    operation: { [self] in
+                        switch try await _connection.receive().content {
+                        case "ok".data(using: .utf8).unsafelyUnwrapped:
+                            break
+                        case "error".data(using: .utf8).unsafelyUnwrapped:
+                            throw Error.receivedErrorResponse
+                        default:
+                            throw Error.receivedInvalidResponse
+                        }
+                    }
+                )
+                group.addTask(
+                    operation: {
+                        try await Task.sleep(for: .seconds(1))
+                        throw Error.receivedInvalidResponse
+                    }
+                )
+                try await group.next()
+            }
+        )
     }
 }
