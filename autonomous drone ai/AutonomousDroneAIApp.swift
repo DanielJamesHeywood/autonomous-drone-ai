@@ -8,11 +8,10 @@ struct AutonomousDroneAIApp: App {
             "Autonomous Drone AI",
             id: "autonomousDroneAI",
             content: {
-                AutonomousDroneAIView()
-                    .task(priority: .utility) {
-                        let tello = Tello()
-                        try! await tello.command()
-                    }
+                AutonomousDroneAIView().task(priority: .utility) {
+                    let tello = Tello()
+                    try! await tello.command()
+                }
             }
         )
     }
