@@ -31,28 +31,28 @@ actor Tello {
         try await _sendCommandAndReceiveResponse("streamoff")
     }
     
-    func emergency() async throws {
-        try await _sendCommand("emergency")
+    func emergency() async {
+        await _sendCommand("emergency")
     }
     
-    func remoteControl(_ a: Int, _ b: Int, _ c: Int, _ d: Int) async throws {
+    func remoteControl(_ a: Int, _ b: Int, _ c: Int, _ d: Int) async {
         precondition(a.magnitude <= 100)
         precondition(b.magnitude <= 100)
         precondition(c.magnitude <= 100)
         precondition(d.magnitude <= 100)
-        try await _sendCommand("rc \(a) \(b) \(c) \(d)")
+        await _sendCommand("rc \(a) \(b) \(c) \(d)")
     }
     
     func _sendCommandAndReceiveResponse(_ command: String) async throws {
-        try await _sendCommand(command)
+        await _sendCommand(command)
         try await _receiveResponse()
     }
     
-    func _sendCommand(_ command: String) async throws {
+    func _sendCommand(_ command: String) async {
         guard let command = command.data(using: .utf8) else {
             preconditionFailure()
         }
-        try await _connection.send(command)
+        try! await _connection.send(command)
     }
     
     func _receiveResponse() async throws {
