@@ -11,7 +11,7 @@ struct AutonomousDroneAIApp: App {
                 AutonomousDroneAIView().task(priority: .utility) {
                     let tello = Tello()
                     try! await tello.command()
-                }
+                } .task(priority: .utility) {} .task(priority: .utility) {}
             }
         )
     }
