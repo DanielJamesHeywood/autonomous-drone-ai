@@ -3,9 +3,21 @@ import Network
 
 actor Tello {
     
-    actor State {}
+    actor State {
+        
+        let _connection = NetworkConnection(
+            to: .hostPort(host: "192.168.10.1", port: .any),
+            using: .parameters { UDP() } .localPort(8890)
+        )
+    }
     
-    actor VideoStream {}
+    actor VideoStream {
+        
+        let _connection = NetworkConnection(
+            to: .hostPort(host: "192.168.10.1", port: .any),
+            using: .parameters { UDP() } .localPort(11111)
+        )
+    }
     
     enum Error: Swift.Error {
         case receivedErrorResponse
