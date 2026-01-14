@@ -6,13 +6,12 @@ actor Tello {
     enum Error: Swift.Error {
         case receivedErrorResponse
         case receivedInvalidResponse
-        case receivedNoResponse
     }
     
     let _connection = NetworkConnection(to: .hostPort(host: "192.168.10.1", port: 8889), using: { UDP() })
     
     func command() async throws {
-        try await _sendCommandAndReceiveResponse("command", retryOnNoResponse: true)
+        try await _sendCommandAndReceiveResponse("command")
     }
     
     func takeoff() async throws {
@@ -24,7 +23,7 @@ actor Tello {
     }
     
     func streamOn() async throws {
-        try await _sendCommandAndReceiveResponse("streamon", retryOnNoResponse: true)
+        try await _sendCommandAndReceiveResponse("streamon")
     }
     
     func emergency() async throws {
@@ -39,18 +38,27 @@ actor Tello {
         try await _sendCommand("rc \(a) \(b) \(c) \(d)")
     }
     
-    func _sendCommandAndReceiveResponse(_ command: String, retryOnNoResponse: Bool = false) async throws {
-        repeat {
-            do {
-                try await _sendCommand(command)
-                try await _receiveResponse()
-                return
-            } catch Error.receivedNoResponse where retryOnNoResponse {
-                try Task.checkCancellation()
-            } catch {
-                throw error
+    func _sendCommandAndReceiveResponse(_ command: String) async throws {
+        try await withThrowingTaskGroup(
+            body: { group in
+                group.addTask(
+                    operation: { [self] in
+                        repeat {
+                            try await _sendCommand(command)
+                            try await Task.sleep(for: .seconds(1))
+                        } while !Task.isCancelled
+                        throw CancellationError()
+                    }
+                )
+                group.addTask(
+                    operation: { [self] in
+                        try await _receiveResponse()
+                    }
+                )
+                try await group.next()
+                group.cancelAll()
             }
-        } while retryOnNoResponse
+        )
     }
     
     func _sendCommand(_ command: String) async throws {
@@ -61,29 +69,13 @@ actor Tello {
     }
     
     func _receiveResponse() async throws {
-        try await withThrowingTaskGroup(
-            body: { group in
-                group.addTask(
-                    operation: { [self] in
-                        switch try await _connection.receive().content {
-                        case "ok".data(using: .utf8).unsafelyUnwrapped:
-                            return
-                        case "error".data(using: .utf8).unsafelyUnwrapped:
-                            throw Error.receivedErrorResponse
-                        default:
-                            throw Error.receivedInvalidResponse
-                        }
-                    }
-                )
-                group.addTask(
-                    operation: {
-                        try await Task.sleep(for: .seconds(1))
-                        throw Error.receivedNoResponse
-                    }
-                )
-                try await group.next()
-                group.cancelAll()
-            }
-        )
+        switch try await _connection.receive().content {
+        case "ok".data(using: .utf8).unsafelyUnwrapped:
+            return
+        case "error".data(using: .utf8).unsafelyUnwrapped:
+            throw Error.receivedErrorResponse
+        default:
+            throw Error.receivedInvalidResponse
+        }
     }
 }
