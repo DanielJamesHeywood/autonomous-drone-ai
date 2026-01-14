@@ -41,6 +41,7 @@ actor Tello {
     func _sendCommandAndReceiveResponse(_ command: String) async throws {
         try await withThrowingDiscardingTaskGroup(
             body: { group in
+                var currentTask: Task<(), any Swift.Error>?
                 var receivedResponse = false
                 group.addTask(
                     operation: { [self] in
@@ -51,7 +52,9 @@ actor Tello {
                                     try await Task.sleep(for: .seconds(1))
                                 }
                             )
+                            currentTask = task
                             try await task.value
+                            currentTask = nil
                         } while !receivedResponse
                     }
                 )
@@ -59,6 +62,7 @@ actor Tello {
                     operation: { [self] in
                         try await _receiveResponse()
                         receivedResponse = true
+                        currentTask?.cancel()
                     }
                 )
             }
