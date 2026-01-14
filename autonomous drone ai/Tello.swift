@@ -46,7 +46,12 @@ actor Tello {
                     operation: { [self] in
                         repeat {
                             try await _sendCommand(command)
-                            try await Task.sleep(for: .seconds(1))
+                            let task = Task(
+                                operation: {
+                                    try await Task.sleep(for: .seconds(1))
+                                }
+                            )
+                            try await task.value
                         } while !receivedResponse
                     }
                 )
