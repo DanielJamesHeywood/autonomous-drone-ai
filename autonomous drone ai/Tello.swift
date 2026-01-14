@@ -3,7 +3,7 @@ import Network
 
 actor Tello {
     
-    actor State {
+    class State {
         
         let _connection = NetworkConnection(
             to: .hostPort(host: "192.168.10.1", port: .any),
@@ -11,7 +11,7 @@ actor Tello {
         )
     }
     
-    actor VideoStream {
+    class VideoStream {
         
         let _connection = NetworkConnection(
             to: .hostPort(host: "192.168.10.1", port: .any),
