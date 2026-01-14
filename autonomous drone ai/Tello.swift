@@ -45,7 +45,9 @@ actor Tello {
                 try await _sendCommand(command)
                 try await _receiveResponse()
                 return
-            } catch Error.receivedNoResponse {} catch {
+            } catch Error.receivedNoResponse where retryOnNoResponse {
+                try Task.checkCancellation()
+            } catch {
                 throw error
             }
         } while retryOnNoResponse
