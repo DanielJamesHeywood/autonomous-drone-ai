@@ -3,6 +3,10 @@ import Network
 
 actor Tello {
     
+    actor State {}
+    
+    actor VideoStream {}
+    
     enum Error: Swift.Error {
         case receivedErrorResponse
         case receivedInvalidResponse
