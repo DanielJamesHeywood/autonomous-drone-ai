@@ -39,24 +39,23 @@ actor Tello {
     }
     
     func _sendCommandAndReceiveResponse(_ command: String) async throws {
-        try await withThrowingTaskGroup(
+        try await withThrowingDiscardingTaskGroup(
             body: { group in
+                var receivedResponse = false
                 group.addTask(
                     operation: { [self] in
                         repeat {
                             try await _sendCommand(command)
                             try await Task.sleep(for: .seconds(1))
-                        } while !Task.isCancelled
-                        throw CancellationError()
+                        } while !receivedResponse
                     }
                 )
                 group.addTask(
                     operation: { [self] in
                         try await _receiveResponse()
+                        receivedResponse = true
                     }
                 )
-                try await group.next()
-                group.cancelAll()
             }
         )
     }
