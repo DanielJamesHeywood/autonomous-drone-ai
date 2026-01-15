@@ -43,6 +43,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         }
         let depthStencilDescriptor = MTLDepthStencilDescriptor()
         depthStencilDescriptor.depthCompareFunction = .less
+        depthStencilDescriptor.isDepthWriteEnabled = true
         self.depthStencilState = device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
         self.sharedEvent = device.makeSharedEvent()!
     }
