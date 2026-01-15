@@ -8,8 +8,6 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     
     let commandAllocators: [MTL4CommandAllocator]
     
-    let renderPipelineState: MTLRenderPipelineState
-    
     let depthStencilState: MTLDepthStencilState
     
     let sharedEvent: MTLSharedEvent
@@ -25,20 +23,6 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             commandAllocators.append(device.makeCommandAllocator()!)
         } while commandAllocators.count < 3
         self.commandAllocators = commandAllocators
-        let renderPipelineDescriptor = MTL4RenderPipelineDescriptor()
-        do {
-            let archive = try device.makeArchive(url: URL(filePath: "renderPipelineStateArchive.bin"))
-            self.renderPipelineState = try! archive.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
-        } catch {
-            let pipelineDataSetSerializerDescriptor = MTL4PipelineDataSetSerializerDescriptor()
-            pipelineDataSetSerializerDescriptor.configuration = .captureBinaries
-            let pipelineDataSetSerializer = device.makePipelineDataSetSerializer(descriptor: pipelineDataSetSerializerDescriptor)
-            let compilerDescriptor = MTL4CompilerDescriptor()
-            compilerDescriptor.pipelineDataSetSerializer = pipelineDataSetSerializer
-            let compiler = try! device.makeCompiler(descriptor: compilerDescriptor)
-            self.renderPipelineState = try! compiler.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
-            try! pipelineDataSetSerializer.serializeAsArchiveAndFlush(url: URL(filePath: "renderPipelineStateArchive.bin"))
-        }
         let depthStencilDescriptor = MTLDepthStencilDescriptor()
         depthStencilDescriptor.depthCompareFunction = .less
         depthStencilDescriptor.isDepthWriteEnabled = true
@@ -61,7 +45,6 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         }
         commandBuffer.beginCommandBuffer(allocator: commandAllocator)
         let renderCommandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
-        renderCommandEncoder.setRenderPipelineState(renderPipelineState)
         renderCommandEncoder.setDepthStencilState(depthStencilState)
         renderCommandEncoder.setViewport(
             MTLViewport(
