@@ -50,6 +50,11 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         let renderCommandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
         if let pipelineState {
             renderCommandEncoder.setRenderPipelineState(pipelineState)
+        } else {
+            let compiler = try! device.makeCompiler(descriptor: MTL4CompilerDescriptor())
+            let pipelineState = try! compiler.makeRenderPipelineState(descriptor: MTL4PipelineDescriptor())
+            renderCommandEncoder.setRenderPipelineState(pipelineState)
+            self.pipelineState = pipelineState
         }
         renderCommandEncoder.setDepthStencilState(depthStencilState)
         renderCommandEncoder.setViewport(
