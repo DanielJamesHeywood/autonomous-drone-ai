@@ -30,7 +30,11 @@ actor Tello {
         try await _sendCommand("emergency")
     }
     
-    func remoteControl(_ a: Int, _ b: Int, _ c: Int, _ d: Int) async throws {
+    func remoteControl(_ a: Float, _ b: Float, _ c: Float, _ d: Float) async throws {
+        try await _remoteControl(Int(a * 100), Int(b * 100), Int(c * 100), Int(d * 100))
+    }
+    
+    func _remoteControl(_ a: Int, _ b: Int, _ c: Int, _ d: Int) async throws {
         precondition(a.magnitude <= 100)
         precondition(b.magnitude <= 100)
         precondition(c.magnitude <= 100)
