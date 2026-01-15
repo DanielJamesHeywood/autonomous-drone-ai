@@ -25,9 +25,21 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             commandAllocators.append(device.makeCommandAllocator()!)
         } while commandAllocators.count < 3
         self.commandAllocators = commandAllocators
-        self.renderPipelineState = try! device
-            .makeArchive(url: URL(filePath: ""))
-            .makeRenderPipelineState(descriptor: MTL4PipelineDescriptor())
+        let renderPipelineDescriptor = MTL4RenderPipelineDescriptor()
+        renderPipelineDescriptor.
+        do {
+            let archive = try device.makeArchive(url: URL(filePath: "renderPipelineStateArchive.bin"))
+            self.renderPipelineState = try! archive.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+        } catch {
+            let pipelineDataSetSerializerDescriptor = MTL4PipelineDataSetSerializerDescriptor()
+            pipelineDataSetSerializerDescriptor.configuration = .captureBinaries
+            let pipelineDataSetSerializer = device.makePipelineDataSetSerializer(descriptor: pipelineDataSetSerializerDescriptor)
+            let compilerDescriptor = MTL4CompilerDescriptor()
+            compilerDescriptor.pipelineDataSetSerializer = pipelineDataSetSerializer
+            let compiler = try! device.makeCompiler(descriptor: compilerDescriptor)
+            self.renderPipelineState = try! compiler.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+            try! pipelineDataSetSerializer.serializeAsArchiveAndFlush(url: URL(filePath: "renderPipelineStateArchive.bin"))
+        }
         let depthStencilDescriptor = MTLDepthStencilDescriptor()
         depthStencilDescriptor.depthCompareFunction = .less
         self.depthStencilState = device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
