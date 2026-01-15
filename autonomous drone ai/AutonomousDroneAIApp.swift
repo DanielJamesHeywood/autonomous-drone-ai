@@ -13,10 +13,6 @@ struct AutonomousDroneAIApp: App {
                     let tello = Tello()
                     try! await tello.command()
                     try! await tello.streamOn()
-                } .task(priority: .utility) {
-                    TelloState()
-                } .task(priority: .utility) {
-                    TelloVideoStream()
                 }
             }
         )
