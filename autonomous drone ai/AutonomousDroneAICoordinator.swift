@@ -2,15 +2,15 @@ import MetalKit
 
 class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     
-    let commandQueue: MTL4CommandQueue
+    let commandQueue: any MTL4CommandQueue
     
-    let commandBuffer: MTL4CommandBuffer
+    let commandBuffer: any MTL4CommandBuffer
     
-    let allocators: [MTL4CommandAllocator]
+    let allocators: [any MTL4CommandAllocator]
     
-    let depthStencilState: MTLDepthStencilState
+    let depthStencilState: any MTLDepthStencilState
     
-    let sharedEvent: MTLSharedEvent
+    let sharedEvent: any MTLSharedEvent
     
     var frameNumber = 0 as UInt64
     
