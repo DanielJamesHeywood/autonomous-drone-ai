@@ -12,6 +12,8 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     
     let sharedEvent: any MTLSharedEvent
     
+    var pipelineState: (any MTLRenderPipelineState)?
+    
     var frameNumber = 0 as UInt64
     
     override init() {
