@@ -6,7 +6,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     
     let commandBuffer: MTL4CommandBuffer
     
-    let commandAllocators: [MTL4CommandAllocator]
+    let allocators: [MTL4CommandAllocator]
     
     let depthStencilState: MTLDepthStencilState
     
@@ -18,11 +18,11 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         let device = MTLCreateSystemDefaultDevice()!
         self.commandQueue = device.makeMTL4CommandQueue()!
         self.commandBuffer = device.makeCommandBuffer()!
-        var commandAllocators = [] as [MTL4CommandAllocator]
+        var allocators = [] as [MTL4CommandAllocator]
         repeat {
-            commandAllocators.append(device.makeCommandAllocator()!)
-        } while commandAllocators.count < 3
-        self.commandAllocators = commandAllocators
+            allocators.append(device.makeCommandAllocator()!)
+        } while allocators.count < 3
+        self.allocators = allocators
         let depthStencilDescriptor = MTLDepthStencilDescriptor()
         depthStencilDescriptor.depthCompareFunction = .less
         depthStencilDescriptor.isDepthWriteEnabled = true
@@ -36,14 +36,14 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         guard let renderPassDescriptor = view.currentMTL4RenderPassDescriptor, let drawable = view.currentDrawable else {
             return
         }
-        let commandAllocator = commandAllocators[Int(frameNumber % 3)]
+        let allocator = allocators[Int(frameNumber % 3)]
         if frameNumber >= 3 {
             guard sharedEvent.wait(untilSignaledValue: frameNumber - 3, timeoutMS: 1000) else {
                 return
             }
-            commandAllocator.reset()
+            allocator.reset()
         }
-        commandBuffer.beginCommandBuffer(allocator: commandAllocator)
+        commandBuffer.beginCommandBuffer(allocator: allocator)
         let renderCommandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
         renderCommandEncoder.setDepthStencilState(depthStencilState)
         renderCommandEncoder.setViewport(
