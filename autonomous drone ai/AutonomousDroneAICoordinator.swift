@@ -2,6 +2,8 @@ import MetalKit
 
 class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     
+    let device = MTLCreateSystemDefaultDevice()!
+    
     let commandQueue: any MTL4CommandQueue
     
     let commandBuffer: any MTL4CommandBuffer
@@ -17,7 +19,6 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     var frameNumber = 0 as UInt64
     
     override init() {
-        let device = MTLCreateSystemDefaultDevice()!
         self.commandQueue = device.makeMTL4CommandQueue()!
         self.commandBuffer = device.makeCommandBuffer()!
         var allocators = [] as [MTL4CommandAllocator]
