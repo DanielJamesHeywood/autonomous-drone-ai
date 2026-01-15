@@ -1,3 +1,4 @@
+import GameController
 import SwiftUI
 
 @main
