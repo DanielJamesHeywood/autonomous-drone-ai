@@ -14,6 +14,8 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     
     let sharedEvent: MTLSharedEvent
     
+    var viewport: MTLViewport?
+    
     var frameNumber = 0 as UInt64
     
     override init() {
@@ -45,7 +47,9 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         self.sharedEvent = device.makeSharedEvent()!
     }
     
-    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
+    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+        viewport = MTLViewport(originX: 0, originY: 0, width: size.width, height: size.height, znear: 0, zfar: 1)
+    }
     
     func draw(in view: MTKView) {
         guard let renderPassDescriptor = view.currentMTL4RenderPassDescriptor, let drawable = view.currentDrawable else {
@@ -64,8 +68,10 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         }
         renderCommandEncoder.setRenderPipelineState(renderPipelineState)
         renderCommandEncoder.setDepthStencilState(depthStencilState)
-        renderCommandEncoder.setViewport(
-            MTLViewport(
+        if let viewport {
+            renderCommandEncoder.setViewport(viewport)
+        } else {
+            let viewport = MTLViewport(
                 originX: 0,
                 originY: 0,
                 width: view.drawableSize.width,
@@ -73,7 +79,9 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
                 znear: 0,
                 zfar: 1
             )
-        )
+            renderCommandEncoder.setViewport(viewport)
+            self.viewport = viewport
+        }
         renderCommandEncoder.endEncoding()
         commandBuffer.endCommandBuffer()
         commandQueue.waitForDrawable(drawable)
