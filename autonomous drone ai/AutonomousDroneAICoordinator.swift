@@ -26,7 +26,6 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         } while commandAllocators.count < 3
         self.commandAllocators = commandAllocators
         let renderPipelineDescriptor = MTL4RenderPipelineDescriptor()
-        renderPipelineDescriptor.
         do {
             let archive = try device.makeArchive(url: URL(filePath: "renderPipelineStateArchive.bin"))
             self.renderPipelineState = try! archive.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
