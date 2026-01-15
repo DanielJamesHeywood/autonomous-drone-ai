@@ -80,7 +80,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         commandQueue.commit([commandBuffer])
         commandQueue.signalDrawable(drawable)
         commandQueue.signalEvent(sharedEvent, value: frameNumber)
-        frameNumber += 1
         drawable.present()
+        frameNumber += 1
     }
 }
