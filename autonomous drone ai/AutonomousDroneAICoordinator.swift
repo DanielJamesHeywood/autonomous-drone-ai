@@ -51,7 +51,12 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         if let pipelineState {
             renderCommandEncoder.setRenderPipelineState(pipelineState)
         } else {
-            let compiler = try! device.makeCompiler(descriptor: MTL4CompilerDescriptor())
+            let pipelineDataSetSerializerDescriptor = MTL4PipelineDataSetSerializerDescriptor()
+            pipelineDataSetSerializerDescriptor.configuration = .captureBinaries
+            let pipelineDataSetSerializer = device.makePipelineDataSetSerializer(descriptor: pipelineDataSetSerializerDescriptor)
+            let compilerDescriptor = MTL4CompilerDescriptor()
+            compilerDescriptor.pipelineDataSetSerializer = pipelineDataSetSerializer
+            let compiler = try! device.makeCompiler(descriptor: compilerDescriptor)
             let pipelineState = try! compiler.makeRenderPipelineState(descriptor: MTL4PipelineDescriptor())
             renderCommandEncoder.setRenderPipelineState(pipelineState)
             self.pipelineState = pipelineState
