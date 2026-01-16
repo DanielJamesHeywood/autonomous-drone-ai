@@ -37,8 +37,14 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         depthStencilDescriptor.depthCompareFunction = .less
         depthStencilDescriptor.isDepthWriteEnabled = true
         self.depthStencilState = device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
-        self.indexBuffer = device.makeBuffer(length: 24)!
-        self.indirectBuffer = device.makeBuffer(length: MemoryLayout<MTLDrawIndexedPrimitivesIndirectArguments>.size)!
+        var indirectArguments = MTLDrawIndexedPrimitivesIndirectArguments(
+            indexCount: 6,
+            instanceCount: 1,
+            indexStart: 0,
+            baseVertex: 0,
+            baseInstance: 0
+        )
+        self.indirectBuffer = device.makeBuffer(bytes: &indirectArguments, length: MemoryLayout.size(ofValue: indirectArguments))!
         self.sharedEvent = device.makeSharedEvent()!
     }
     
