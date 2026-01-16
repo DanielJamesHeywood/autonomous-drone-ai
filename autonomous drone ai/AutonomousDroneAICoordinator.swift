@@ -27,7 +27,8 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     override init() {
         self.commandQueue = device.makeMTL4CommandQueue()!
         self.commandBuffer = device.makeCommandBuffer()!
-        self.argumentTable = try! device.makeArgumentTable(descriptor: MTL4ArgumentTableDescriptor())
+        let argumentTableDescriptor = MTL4ArgumentTableDescriptor()
+        self.argumentTable = try! device.makeArgumentTable(descriptor: argumentTableDescriptor)
         var allocators = [] as [MTL4CommandAllocator]
         repeat {
             allocators.append(device.makeCommandAllocator()!)
