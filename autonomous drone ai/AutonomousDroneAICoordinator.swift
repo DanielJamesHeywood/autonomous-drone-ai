@@ -58,8 +58,15 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             compilerDescriptor.pipelineDataSetSerializer = pipelineDataSetSerializer
             let compiler = try! device.makeCompiler(descriptor: compilerDescriptor)
             let pipelineDescriptor = MTL4RenderPipelineDescriptor()
-            pipelineDescriptor.fragmentFunctionDescriptor = MTL4FunctionDescriptor()
-            pipelineDescriptor.vertexFunctionDescriptor = MTL4FunctionDescriptor()
+            let library = device.makeDefaultLibrary()!
+            let vertexFunctionDescriptor = MTL4LibraryFunctionDescriptor()
+            vertexFunctionDescriptor.library = library
+            vertexFunctionDescriptor.name = "vertex_shader"
+            pipelineDescriptor.vertexFunctionDescriptor = vertexFunctionDescriptor
+            let fragmentFunctionDescriptor = MTL4LibraryFunctionDescriptor()
+            fragmentFunctionDescriptor.library = library
+            fragmentFunctionDescriptor.name = "fragment_shader"
+            pipelineDescriptor.fragmentFunctionDescriptor = fragmentFunctionDescriptor
             let pipelineState = try! compiler.makeRenderPipelineState(descriptor: pipelineDescriptor)
             renderCommandEncoder.setRenderPipelineState(pipelineState)
             self.pipelineState = pipelineState
