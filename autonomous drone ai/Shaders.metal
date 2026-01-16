@@ -14,9 +14,9 @@ struct VertexOut {
 [[vertex]] VertexOut vertexShader(
     uint id [[vertex_id]],
     const device VertexIn* vertices [[buffer(0)]],
-    constant float4x4& matrix [[buffer(1)]]
+    constant float4x4& modelViewProjectionMatrix [[buffer(1)]]
 ) {
-    return {matrix * float4(vertices[id].position, 1), float4(vertices[id].color, 1)};
+    return {modelViewProjectionMatrix * float4(vertices[id].position, 1), float4(vertices[id].color, 1)};
 }
 
 [[fragment]] float4 fragmentShader(VertexOut in [[stage_in]]) {
