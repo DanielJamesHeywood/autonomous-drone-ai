@@ -10,7 +10,18 @@ struct VertexOut {
 };
 
 [[vertex]] VertexOut vertexShader(uint id [[vertex_id]]) {
-    return {float4(0, 0, 0, 1), float4(0, 0, 0, 1)};
+    switch (id) {
+        case 0:
+            return {float4(-1, -1, 0, 1), float4(0, 0, 0, 1)};
+        case 1:
+            return {float4(-1, 1, 0, 1), float4(1, 0, 0, 1)};
+        case 2:
+            return {float4(1, -1, 0, 1), float4(0, 1, 1, 1)};
+        case 3:
+            return {float4(1, 1, 0, 1), float4(1, 1, 1, 1)};
+        default:
+            return VertexOut();
+    }
 }
 
 [[fragment]] float4 fragmentShader(VertexOut in [[stage_in]]) {
