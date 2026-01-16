@@ -51,6 +51,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         if let pipelineState {
             renderCommandEncoder.setRenderPipelineState(pipelineState)
         } else {
+            let archiveURL = URL(filePath: "renderPipelineStateArchive.bin")
             let pipelineDescriptor = MTL4RenderPipelineDescriptor()
             let library = device.makeDefaultLibrary()!
             let vertexFunctionDescriptor = MTL4LibraryFunctionDescriptor()
@@ -63,7 +64,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             pipelineDescriptor.fragmentFunctionDescriptor = fragmentFunctionDescriptor
             let pipelineState: any MTLRenderPipelineState
             do {
-                let archive = try device.makeArchive(url: URL(filePath: "renderPipelineStateArchive.bin"))
+                let archive = try device.makeArchive(url: archiveURL)
                 pipelineState = try! archive.makeRenderPipelineState(descriptor: pipelineDescriptor)
             } catch {
                 let pipelineDataSetSerializerDescriptor = MTL4PipelineDataSetSerializerDescriptor()
@@ -73,7 +74,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
                 compilerDescriptor.pipelineDataSetSerializer = pipelineDataSetSerializer
                 let compiler = try! device.makeCompiler(descriptor: compilerDescriptor)
                 pipelineState = try! compiler.makeRenderPipelineState(descriptor: pipelineDescriptor)
-                try! pipelineDataSetSerializer.serializeAsArchiveAndFlush(url: URL(filePath: "renderPipelineStateArchive.bin"))
+                try! pipelineDataSetSerializer.serializeAsArchiveAndFlush(url: archiveURL)
             }
             renderCommandEncoder.setRenderPipelineState(pipelineState)
             self.pipelineState = pipelineState
