@@ -1,4 +1,9 @@
 
+struct VertexIn {
+    float3 position;
+    float3 color;
+};
+
 struct VertexOut {
     float4 position [[position]];
     float4 color;
