@@ -53,8 +53,8 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         } else {
             let pipelineState: any MTLRenderPipelineState
             let archiveURL = URL(filePath: "renderPipelineStateArchive.bin")
-            let pipelineDescriptor = MTL4RenderPipelineDescriptor()
             let library = device.makeDefaultLibrary()!
+            let pipelineDescriptor = MTL4RenderPipelineDescriptor()
             let vertexFunctionDescriptor = MTL4LibraryFunctionDescriptor()
             vertexFunctionDescriptor.library = library
             vertexFunctionDescriptor.name = "vertex_shader"
