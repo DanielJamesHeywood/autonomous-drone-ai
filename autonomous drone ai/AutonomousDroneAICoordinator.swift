@@ -14,6 +14,10 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     
     let depthStencilState: any MTLDepthStencilState
     
+    let indexBuffer: any MTLBuffer
+    
+    let indirectBuffer: any MTLBuffer
+    
     let sharedEvent: any MTLSharedEvent
     
     var pipelineState: (any MTLRenderPipelineState)?
@@ -33,6 +37,8 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         depthStencilDescriptor.depthCompareFunction = .less
         depthStencilDescriptor.isDepthWriteEnabled = true
         self.depthStencilState = device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
+        self.indexBuffer = device.makeBuffer(length: 24)!
+        self.indirectBuffer = device.makeBuffer(length: MemoryLayout<MTLDrawIndexedPrimitivesIndirectArguments>.size)!
         self.sharedEvent = device.makeSharedEvent()!
     }
     
@@ -99,6 +105,13 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             )
         )
         renderCommandEncoder.setArgumentTable(argumentTable, stages: .vertex)
+        renderCommandEncoder.drawIndexedPrimitives(
+            primitiveType: .triangle,
+            indexType: .uint32,
+            indexBuffer: indexBuffer.gpuAddress,
+            indexBufferLength: indexBuffer.length,
+            indirectBuffer: indirectBuffer.gpuAddress
+        )
         renderCommandEncoder.endEncoding()
         commandBuffer.endCommandBuffer()
         commandQueue.waitForDrawable(drawable)
