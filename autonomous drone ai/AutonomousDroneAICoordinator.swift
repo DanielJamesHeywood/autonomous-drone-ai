@@ -8,6 +8,8 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     
     let commandBuffer: any MTL4CommandBuffer
     
+    let argumentTable: any MTL4ArgumentTable
+    
     let allocators: [any MTL4CommandAllocator]
     
     let depthStencilState: any MTLDepthStencilState
@@ -21,6 +23,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     override init() {
         self.commandQueue = device.makeMTL4CommandQueue()!
         self.commandBuffer = device.makeCommandBuffer()!
+        self.argumentTable = try! device.makeArgumentTable(descriptor: MTL4ArgumentTableDescriptor())
         var allocators = [] as [MTL4CommandAllocator]
         repeat {
             allocators.append(device.makeCommandAllocator()!)
@@ -95,6 +98,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
                 zfar: 1
             )
         )
+        renderCommandEncoder.setArgumentTable(argumentTable, stages: .vertex)
         renderCommandEncoder.endEncoding()
         commandBuffer.endCommandBuffer()
         commandQueue.waitForDrawable(drawable)
