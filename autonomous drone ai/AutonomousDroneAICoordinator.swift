@@ -55,14 +55,14 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             let archiveURL = URL(filePath: "renderPipelineStateArchive.bin")
             let library = device.makeDefaultLibrary()!
             let pipelineDescriptor = MTL4RenderPipelineDescriptor()
-            let vertexFunctionDescriptor = MTL4LibraryFunctionDescriptor()
-            vertexFunctionDescriptor.library = library
-            vertexFunctionDescriptor.name = "vertex_shader"
-            pipelineDescriptor.vertexFunctionDescriptor = vertexFunctionDescriptor
             let fragmentFunctionDescriptor = MTL4LibraryFunctionDescriptor()
             fragmentFunctionDescriptor.library = library
             fragmentFunctionDescriptor.name = "fragment_shader"
             pipelineDescriptor.fragmentFunctionDescriptor = fragmentFunctionDescriptor
+            let vertexFunctionDescriptor = MTL4LibraryFunctionDescriptor()
+            vertexFunctionDescriptor.library = library
+            vertexFunctionDescriptor.name = "vertex_shader"
+            pipelineDescriptor.vertexFunctionDescriptor = vertexFunctionDescriptor
             do {
                 let archive = try device.makeArchive(url: archiveURL)
                 pipelineState = try! archive.makeRenderPipelineState(descriptor: pipelineDescriptor)
