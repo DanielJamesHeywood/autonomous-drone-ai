@@ -85,6 +85,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             renderCommandEncoder.setRenderPipelineState(pipelineState)
             self.pipelineState = pipelineState
         }
+        renderCommandEncoder.setCullMode(.back)
         renderCommandEncoder.setDepthStencilState(depthStencilState)
         renderCommandEncoder.setViewport(
             MTLViewport(
