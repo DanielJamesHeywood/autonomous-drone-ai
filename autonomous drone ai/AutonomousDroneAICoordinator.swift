@@ -58,14 +58,14 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             pipelineDescriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
             let fragmentFunctionDescriptor = MTL4LibraryFunctionDescriptor()
             fragmentFunctionDescriptor.library = library
-            fragmentFunctionDescriptor.name = "fragment_shader"
+            fragmentFunctionDescriptor.name = "fragmentShadera"
             pipelineDescriptor.fragmentFunctionDescriptor = fragmentFunctionDescriptor
             pipelineDescriptor.rasterSampleCount = 4
             let vertexDescriptor = MTLVertexDescriptor()
             pipelineDescriptor.vertexDescriptor = vertexDescriptor
             let vertexFunctionDescriptor = MTL4LibraryFunctionDescriptor()
             vertexFunctionDescriptor.library = library
-            vertexFunctionDescriptor.name = "vertex_shader"
+            vertexFunctionDescriptor.name = "vertexShader"
             pipelineDescriptor.vertexFunctionDescriptor = vertexFunctionDescriptor
             do {
                 let archive = try device.makeArchive(url: archiveURL)
