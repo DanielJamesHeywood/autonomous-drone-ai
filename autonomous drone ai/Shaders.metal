@@ -4,7 +4,7 @@ struct VertexOut {
     float4 color;
 };
 
-[[vertex]] VertexOut vertexShader() {
+[[vertex]] VertexOut vertexShader(uint id [[vertex_id]]) {
     return {float4(0, 0, 0, 1), float4(0, 0, 0, 1)};
 }
 
