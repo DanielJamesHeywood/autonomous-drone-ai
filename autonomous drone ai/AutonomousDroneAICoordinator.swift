@@ -51,12 +51,6 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         if let pipelineState {
             renderCommandEncoder.setRenderPipelineState(pipelineState)
         } else {
-            let pipelineDataSetSerializerDescriptor = MTL4PipelineDataSetSerializerDescriptor()
-            pipelineDataSetSerializerDescriptor.configuration = .captureBinaries
-            let pipelineDataSetSerializer = device.makePipelineDataSetSerializer(descriptor: pipelineDataSetSerializerDescriptor)
-            let compilerDescriptor = MTL4CompilerDescriptor()
-            compilerDescriptor.pipelineDataSetSerializer = pipelineDataSetSerializer
-            let compiler = try! device.makeCompiler(descriptor: compilerDescriptor)
             let pipelineDescriptor = MTL4RenderPipelineDescriptor()
             let library = device.makeDefaultLibrary()!
             let vertexFunctionDescriptor = MTL4LibraryFunctionDescriptor()
@@ -67,7 +61,20 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             fragmentFunctionDescriptor.library = library
             fragmentFunctionDescriptor.name = "fragment_shader"
             pipelineDescriptor.fragmentFunctionDescriptor = fragmentFunctionDescriptor
-            let pipelineState = try! compiler.makeRenderPipelineState(descriptor: pipelineDescriptor)
+            let pipelineState: any MTLRenderPipelineState
+            do {
+                let archive = try device.makeArchive(url: URL(filePath: "a.bin"))
+                pipelineState = try! archive.makeRenderPipelineState(descriptor: pipelineDescriptor)
+            } catch {
+                let pipelineDataSetSerializerDescriptor = MTL4PipelineDataSetSerializerDescriptor()
+                pipelineDataSetSerializerDescriptor.configuration = .captureBinaries
+                let pipelineDataSetSerializer = device.makePipelineDataSetSerializer(descriptor: pipelineDataSetSerializerDescriptor)
+                let compilerDescriptor = MTL4CompilerDescriptor()
+                compilerDescriptor.pipelineDataSetSerializer = pipelineDataSetSerializer
+                let compiler = try! device.makeCompiler(descriptor: compilerDescriptor)
+                pipelineState = try! compiler.makeRenderPipelineState(descriptor: pipelineDescriptor)
+                try! pipelineDataSetSerializer.serializeAsArchiveAndFlush(url: URL(filePath: "a.bin"))
+            }
             renderCommandEncoder.setRenderPipelineState(pipelineState)
             self.pipelineState = pipelineState
         }
