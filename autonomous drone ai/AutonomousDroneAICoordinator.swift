@@ -58,7 +58,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             pipelineDescriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
             let fragmentFunctionDescriptor = MTL4LibraryFunctionDescriptor()
             fragmentFunctionDescriptor.library = library
-            fragmentFunctionDescriptor.name = "fragmentShadera"
+            fragmentFunctionDescriptor.name = "fragmentShader"
             pipelineDescriptor.fragmentFunctionDescriptor = fragmentFunctionDescriptor
             pipelineDescriptor.rasterSampleCount = 4
             let vertexFunctionDescriptor = MTL4LibraryFunctionDescriptor()
