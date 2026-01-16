@@ -51,6 +51,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         if let pipelineState {
             renderCommandEncoder.setRenderPipelineState(pipelineState)
         } else {
+            let pipelineState: any MTLRenderPipelineState
             let archiveURL = URL(filePath: "renderPipelineStateArchive.bin")
             let pipelineDescriptor = MTL4RenderPipelineDescriptor()
             let library = device.makeDefaultLibrary()!
@@ -62,7 +63,6 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             fragmentFunctionDescriptor.library = library
             fragmentFunctionDescriptor.name = "fragment_shader"
             pipelineDescriptor.fragmentFunctionDescriptor = fragmentFunctionDescriptor
-            let pipelineState: any MTLRenderPipelineState
             do {
                 let archive = try device.makeArchive(url: archiveURL)
                 pipelineState = try! archive.makeRenderPipelineState(descriptor: pipelineDescriptor)
