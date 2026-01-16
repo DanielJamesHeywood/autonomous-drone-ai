@@ -7,6 +7,7 @@ struct AutonomousDroneAIView: NSViewRepresentable {
         let view = MTKView()
         view.delegate = context.coordinator
         view.device = MTLCreateSystemDefaultDevice()
+        view.sampleCount = 4
         return view
     }
     
