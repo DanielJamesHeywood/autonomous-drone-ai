@@ -55,6 +55,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             let archiveURL = URL(filePath: "renderPipelineStateArchive.bin")
             let library = device.makeDefaultLibrary()!
             let pipelineDescriptor = MTL4RenderPipelineDescriptor()
+            pipelineDescriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
             let fragmentFunctionDescriptor = MTL4LibraryFunctionDescriptor()
             fragmentFunctionDescriptor.library = library
             fragmentFunctionDescriptor.name = "fragment_shader"
