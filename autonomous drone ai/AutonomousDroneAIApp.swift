@@ -10,6 +10,8 @@ struct AutonomousDroneAIApp: App {
             id: "autonomousDroneAI",
             content: {
                 AutonomousDroneAIView().task(priority: .utility) {
+                    await GCController.startWirelessControllerDiscovery()
+                } .task(priority: .utility) {
                     let tello = Tello()
                     try! await tello.command()
                     try! await tello.streamOn()
