@@ -5,7 +5,7 @@ import SwiftUI
 @main
 struct AutonomousDroneAIApp: App {
     
-    let tello = Tello()
+    let _tello = Tello()
     
     var body: some Scene {
         Window(
@@ -35,8 +35,8 @@ struct AutonomousDroneAIApp: App {
                         gamepad.rightThumbstick.valueChangedHandler = nil
                     }
                 } .task(priority: .utility) {
-                    try! await tello.command()
-                    try! await tello.streamOn()
+                    try! await _tello.command()
+                    try! await _tello.streamOn()
                 }
             }
         )
