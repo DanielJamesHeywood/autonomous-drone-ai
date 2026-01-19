@@ -47,19 +47,19 @@ actor TelloController {
                 for await notification in NotificationCenter.default.notifications(named: .GCControllerDidBecomeCurrent) {
                     let controller = notification.object as! GCController
                     guard let gamepad = controller.extendedGamepad else { continue }
-                    gamepad.buttonA.pressedChangedHandler = { [weak self] _, _, pressed in
-                        guard let self, pressed else { return }
+                    gamepad.buttonA.pressedChangedHandler = { [self] _, _, pressed in
+                        guard pressed else { return }
                         Task(
                             operation: {
-                                await self._buttonAPressed()
+                                await _buttonAPressed()
                             }
                         )
                     }
-                    gamepad.buttonB.pressedChangedHandler = { [weak self] _, _, pressed in
-                        guard let self, pressed else { return }
+                    gamepad.buttonB.pressedChangedHandler = { [self] _, _, pressed in
+                        guard pressed else { return }
                         Task(
                             operation: {
-                                await self._buttonBPressed()
+                                await _buttonBPressed()
                             }
                         )
                     }
