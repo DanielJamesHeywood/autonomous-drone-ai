@@ -2,6 +2,12 @@ import GameController
 
 actor TelloController {
     
+    var task1: Task<Void, Never>?
+    
+    var task2: Task<Void, Never>?
+    
+    var task3: Task<Void, Never>?
+    
     var _tello: Tello?
     
     var _isFlying = false
@@ -23,13 +29,13 @@ actor TelloController {
     }
     
     init() {
-        Task(
+        task1 = Task(
             priority: .utility,
             operation: {
                 let tello = Tello()
             }
         )
-        Task(
+        task2 = Task(
             priority: .utility,
             operation: {
                 for await notification in NotificationCenter.default.notifications(named: .GCControllerDidBecomeCurrent) {
@@ -54,7 +60,7 @@ actor TelloController {
                 }
             }
         )
-        Task(
+        task3 = Task(
             priority: .utility,
             operation: {
                 for await notification in NotificationCenter.default.notifications(named: .GCControllerDidStopBeingCurrent) {
@@ -67,5 +73,9 @@ actor TelloController {
         )
     }
     
-    deinit {}
+    deinit {
+        task1.unsafelyUnwrapped.cancel()
+        task2.unsafelyUnwrapped.cancel()
+        task3.unsafelyUnwrapped.cancel()
+    }
 }
