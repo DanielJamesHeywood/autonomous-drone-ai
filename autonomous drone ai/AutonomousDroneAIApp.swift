@@ -14,6 +14,8 @@ struct AutonomousDroneAIApp: App {
             content: {
                 AutonomousDroneAIView().task(priority: .utility) {
                     let tello = Tello()
+                    try! await tello.command()
+                    try! await tello.streamOn()
                     await _telloController.initializeTello(tello)
                 } .task(priority: .utility) {
                     for await notification in NotificationCenter.default.notifications(named: .GCControllerDidBecomeCurrent) {
