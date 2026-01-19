@@ -13,6 +13,7 @@ actor TelloController {
     var _isFlying = false
     
     func _initializeTello(_ tello: Tello) {
+        precondition(_tello == nil)
         _tello = tello
     }
     
