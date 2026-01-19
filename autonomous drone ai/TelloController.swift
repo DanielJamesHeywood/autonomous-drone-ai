@@ -12,6 +12,10 @@ actor TelloController {
     
     var _isFlying = false
     
+    func _initializeTello(_ tello: Tello) {
+        _tello = tello
+    }
+    
     func _buttonAPressed() async {
         guard let _tello else { return }
         do {
@@ -33,6 +37,7 @@ actor TelloController {
             priority: .utility,
             operation: {
                 let tello = Tello()
+                await _initializeTello(tello)
             }
         )
         task2 = Task(
