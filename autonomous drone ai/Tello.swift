@@ -77,16 +77,13 @@ actor Tello {
         guard let command = command.data(using: .utf8) else {
             preconditionFailure()
         }
-        do {
+        try await _recreatingConnectionOnFailure {
             try await _connection.send(command)
-        } catch {
-            _connection = NetworkConnection(to: .hostPort(host: "192.168.10.1", port: 8889), using: { UDP() })
-            throw error
         }
     }
     
     func _receiveResponse() async throws {
-        do {
+        try await _recreatingConnectionOnFailure {
             switch try await _connection.receive().content {
             case "ok".data(using: .utf8).unsafelyUnwrapped:
                 return
@@ -95,8 +92,16 @@ actor Tello {
             default:
                 throw Error.receivedInvalidResponse
             }
+        }
+    }
+    
+    func _recreatingConnectionOnFailure(_ body: () async throws -> Void) async rethrows {
+        do {
+            try await body()
         } catch {
-            _connection = NetworkConnection(to: .hostPort(host: "192.168.10.1", port: 8889), using: { UDP() })
+            if !(error is Error) {
+                _connection = NetworkConnection(to: .hostPort(host: "192.168.10.1", port: 8889), using: { UDP() })
+            }
             throw error
         }
     }
