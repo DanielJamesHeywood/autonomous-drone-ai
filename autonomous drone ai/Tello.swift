@@ -98,10 +98,10 @@ actor Tello {
     func _recreatingConnectionOnFailure(_ body: () async throws -> Void) async rethrows {
         do {
             try await body()
+        } catch let error as Error {
+            throw error
         } catch {
-            if !(error is Error) {
-                _connection = NetworkConnection(to: .hostPort(host: "192.168.10.1", port: 8889), using: { UDP() })
-            }
+            _connection = NetworkConnection(to: .hostPort(host: "192.168.10.1", port: 8889), using: { UDP() })
             throw error
         }
     }
