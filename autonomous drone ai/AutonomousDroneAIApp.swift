@@ -5,6 +5,8 @@ import SwiftUI
 @main
 struct AutonomousDroneAIApp: App {
     
+    let _flightController = FlightController()
+    
     var body: some Scene {
         Window(
             "Autonomous Drone AI",
