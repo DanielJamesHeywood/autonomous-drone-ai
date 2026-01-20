@@ -3,16 +3,14 @@ actor FlightController {
     
     var _tello: Tello?
     
-    func initializeTello() async {
+    func initializeTello() async throws {
         let tello = Tello()
         repeat {
             do {
                 try await tello.command()
                 break
             } catch {
-                do {
-                    try await Task.sleep(for: .seconds(1))
-                } catch { return }
+                try await Task.sleep(for: .seconds(1))
             }
         } while true
         repeat {
@@ -20,9 +18,7 @@ actor FlightController {
                 try await tello.streamOn()
                 break
             } catch {
-                do {
-                    try await Task.sleep(for: .seconds(1))
-                } catch { return }
+                try await Task.sleep(for: .seconds(1))
             }
         } while true
         _tello = tello

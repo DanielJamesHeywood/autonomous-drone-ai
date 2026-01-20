@@ -13,7 +13,7 @@ struct AutonomousDroneAIApp: App {
             id: "autonomousDroneAI",
             content: {
                 AutonomousDroneAIView().task(priority: .utility) {
-                    await _flightController.initializeTello()
+                    try? await _flightController.initializeTello()
                 } .task(priority: .utility) {
                     for await notification in NotificationCenter.default.notifications(named: .GCControllerDidBecomeCurrent) {
                         let controller = notification.object as! GCController
