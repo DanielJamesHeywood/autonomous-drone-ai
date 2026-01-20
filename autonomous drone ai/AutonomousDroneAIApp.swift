@@ -13,9 +13,9 @@ struct AutonomousDroneAIApp: App {
                 AutonomousDroneAIView().task(priority: .utility) {
                     try? await _flightController.initializeTello()
                 } .task(priority: .utility) {
-                    await _flightController.handleControllerDidBecomeCurrentNotifications()
+                    await _flightController.handleControllersBecomingCurrent()
                 } .task(priority: .utility) {
-                    await _flightController.handleControllerDidStopBeingCurrentNotifications()
+                    await _flightController.handleControllersStoppingBeingCurrent()
                 }
             }
         )

@@ -16,7 +16,7 @@ actor FlightController {
         _tello = tello
     }
     
-    func handleControllerDidBecomeCurrentNotifications() async {
+    func handleControllersBecomingCurrent() async {
         for await notification in NotificationCenter.default.notifications(named: .GCControllerDidBecomeCurrent) {
             let controller = notification.object as! GCController
             guard let gamepad = controller.extendedGamepad else { continue }
@@ -29,7 +29,7 @@ actor FlightController {
         }
     }
     
-    func handleControllerDidStopBeingCurrentNotifications() async {
+    func handleControllersStoppingBeingCurrent() async {
         for await notification in NotificationCenter.default.notifications(named: .GCControllerDidStopBeingCurrent) {
             let controller = notification.object as! GCController
             guard let gamepad = controller.extendedGamepad else { continue }
