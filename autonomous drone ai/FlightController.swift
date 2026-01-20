@@ -5,6 +5,8 @@ actor FlightController {
     
     var _tello: Tello?
     
+    var _isFlying = false
+    
     func initializeTello() async throws {
         let tello = Tello()
         try await _retryingOnFailure {
@@ -20,8 +22,14 @@ actor FlightController {
         for await notification in NotificationCenter.default.notifications(named: .GCControllerDidBecomeCurrent) {
             let controller = notification.object as! GCController
             guard let gamepad = controller.extendedGamepad else { continue }
-            gamepad.buttonA.pressedChangedHandler = { _, _, pressed in
-                guard pressed else { return }
+            gamepad.buttonA.pressedChangedHandler = { [self] _, _, pressed in
+                guard let _tello, pressed else { return }
+                Task(
+                    operation: {
+                        try await _isFlying ? _tello.land() : _tello.takeoff()
+                        _isFlying.toggle()
+                    }
+                )
             }
             gamepad.buttonB.pressedChangedHandler = { _, _, pressed in
                 guard pressed else { return }
