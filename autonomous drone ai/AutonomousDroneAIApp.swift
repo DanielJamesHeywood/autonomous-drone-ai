@@ -12,7 +12,7 @@ struct AutonomousDroneAIApp: App {
             content: {
                 AutonomousDroneAIView().task(priority: .utility) {
                     let tello = Tello()
-                    while true {
+                    repeat {
                         do {
                             try await tello.command()
                             break
@@ -21,8 +21,8 @@ struct AutonomousDroneAIApp: App {
                                 try await Task.sleep(for: .seconds(1))
                             } catch { return }
                         }
-                    }
-                    while true {
+                    } while true
+                    repeat {
                         do {
                             try await tello.streamOn()
                             break
@@ -31,7 +31,7 @@ struct AutonomousDroneAIApp: App {
                                 try await Task.sleep(for: .seconds(1))
                             } catch { return }
                         }
-                    }
+                    } while true
                 } .task(priority: .utility) {
                     for await notification in NotificationCenter.default.notifications(named: .GCControllerDidBecomeCurrent) {
                         let controller = notification.object as! GCController
