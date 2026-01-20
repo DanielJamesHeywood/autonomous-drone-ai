@@ -34,6 +34,7 @@ struct AutonomousDroneAIApp: App {
                             } catch { return }
                         }
                     } while true
+                    await _flightController.initializeTello(tello)
                 } .task(priority: .utility) {
                     for await notification in NotificationCenter.default.notifications(named: .GCControllerDidBecomeCurrent) {
                         let controller = notification.object as! GCController
