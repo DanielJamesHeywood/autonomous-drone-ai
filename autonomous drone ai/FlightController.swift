@@ -5,22 +5,23 @@ actor FlightController {
     
     func initializeTello() async throws {
         let tello = Tello()
-        repeat {
-            do {
-                try await tello.command()
-                break
-            } catch {
-                try await Task.sleep(for: .seconds(1))
-            }
-        } while true
-        repeat {
-            do {
-                try await tello.streamOn()
-                break
-            } catch {
-                try await Task.sleep(for: .seconds(1))
-            }
-        } while true
+        try await _retryingOnFailure {
+            try await tello.command()
+        }
+        try await _retryingOnFailure {
+            try await tello.streamOn()
+        }
         _tello = tello
+    }
+    
+    func _retryingOnFailure(_ body: () async throws -> Void) async throws {
+        repeat {
+            do {
+                try await body()
+                return
+            } catch {
+                try await Task.sleep(for: .seconds(1))
+            }
+        } while true
     }
 }
