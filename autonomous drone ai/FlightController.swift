@@ -31,8 +31,14 @@ actor FlightController {
                     }
                 )
             }
-            gamepad.buttonB.pressedChangedHandler = { _, _, pressed in
-                guard pressed else { return }
+            gamepad.buttonB.pressedChangedHandler = { [self] _, _, pressed in
+                guard let _tello, pressed else { return }
+                Task(
+                    operation: {
+                        try await _tello.emergency()
+                        _isFlying = false
+                    }
+                )
             }
         }
     }
