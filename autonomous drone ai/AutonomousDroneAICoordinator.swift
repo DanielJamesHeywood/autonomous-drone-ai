@@ -4,8 +4,6 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     
     let _renderer: Renderer
     
-    let commandQueue: any MTL4CommandQueue
-    
     let commandBuffer: any MTL4CommandBuffer
     
     let argumentTable: any MTL4ArgumentTable
@@ -26,7 +24,6 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     
     init(renderer: Renderer) {
         _renderer = renderer
-        self.commandQueue = _renderer._device.makeMTL4CommandQueue()!
         self.commandBuffer = _renderer._device.makeCommandBuffer()!
         let argumentTableDescriptor = MTL4ArgumentTableDescriptor()
         self.argumentTable = try! _renderer._device.makeArgumentTable(descriptor: argumentTableDescriptor)
@@ -123,10 +120,10 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         )
         renderCommandEncoder.endEncoding()
         commandBuffer.endCommandBuffer()
-        commandQueue.waitForDrawable(drawable)
-        commandQueue.commit([commandBuffer])
-        commandQueue.signalDrawable(drawable)
-        commandQueue.signalEvent(sharedEvent, value: frameNumber)
+        _renderer._commandQueue.waitForDrawable(drawable)
+        _renderer._commandQueue.commit([commandBuffer])
+        _renderer._commandQueue.signalDrawable(drawable)
+        _renderer._commandQueue.signalEvent(sharedEvent, value: frameNumber)
         drawable.present()
         frameNumber += 1
     }
