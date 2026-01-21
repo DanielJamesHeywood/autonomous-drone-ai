@@ -33,7 +33,7 @@ actor Tello {
     func _sendCommandAndReceiveResponse(_ command: String) async throws {
         try await withThrowingDiscardingTaskGroup(
             body: { group in
-                var currentSleepTask: Task<(), any Swift.Error>?
+                var currentSleepTask: Task<Void, Never>?
                 var receivedResponse = false
                 group.addTask(
                     operation: { [self] in
@@ -41,11 +41,11 @@ actor Tello {
                             try await _sendCommand(command)
                             let sleepTask = Task(
                                 operation: {
-                                    try await Task.sleep(for: .seconds(1))
+                                    try? await Task.sleep(for: .seconds(1))
                                 }
-                            )
+                            ) as Task<Void, Never>
                             currentSleepTask = sleepTask
-                            try await sleepTask.value
+                            await sleepTask.value
                             currentSleepTask = nil
                         } while !receivedResponse
                     }
