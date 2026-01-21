@@ -56,9 +56,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         }
         let allocator = allocators[Int(frameNumber % 3)]
         if frameNumber >= 3 {
-            guard sharedEvent.wait(untilSignaledValue: frameNumber - 3, timeoutMS: 1000) else {
-                return
-            }
+            guard sharedEvent.wait(untilSignaledValue: frameNumber - 3, timeoutMS: 1000) else { return }
             allocator.reset()
         }
         commandBuffer.beginCommandBuffer(allocator: allocator)
