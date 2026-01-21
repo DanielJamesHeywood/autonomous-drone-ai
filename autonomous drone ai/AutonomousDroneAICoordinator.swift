@@ -51,78 +51,82 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
     
     func draw(in view: MTKView) {
-        guard let renderPassDescriptor = view.currentMTL4RenderPassDescriptor, let drawable = view.currentDrawable else {
-            return
-        }
-        let allocator = allocators[Int(frameNumber % 3)]
-        if frameNumber >= 3 {
-            guard sharedEvent.wait(untilSignaledValue: frameNumber - 3, timeoutMS: 1000) else { return }
-            allocator.reset()
-        }
-        commandBuffer.beginCommandBuffer(allocator: allocator)
-        let renderCommandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
-        if let pipelineState {
-            renderCommandEncoder.setRenderPipelineState(pipelineState)
-        } else {
-            let pipelineState: any MTLRenderPipelineState
-            let archiveURL = URL(filePath: "renderPipelineStateArchive.bin")
-            let library = _renderer._device.makeDefaultLibrary()!
-            let pipelineDescriptor = MTL4RenderPipelineDescriptor()
-            pipelineDescriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
-            let fragmentFunctionDescriptor = MTL4LibraryFunctionDescriptor()
-            fragmentFunctionDescriptor.library = library
-            fragmentFunctionDescriptor.name = "fragmentShader"
-            pipelineDescriptor.fragmentFunctionDescriptor = fragmentFunctionDescriptor
-            pipelineDescriptor.rasterSampleCount = 4
-            let vertexFunctionDescriptor = MTL4LibraryFunctionDescriptor()
-            vertexFunctionDescriptor.library = library
-            vertexFunctionDescriptor.name = "vertexShader"
-            pipelineDescriptor.vertexFunctionDescriptor = vertexFunctionDescriptor
-            do {
-                let archive = try _renderer._device.makeArchive(url: archiveURL)
-                pipelineState = try! archive.makeRenderPipelineState(descriptor: pipelineDescriptor)
-            } catch {
-                let pipelineDataSetSerializerDescriptor = MTL4PipelineDataSetSerializerDescriptor()
-                pipelineDataSetSerializerDescriptor.configuration = .captureBinaries
-                let pipelineDataSetSerializer = _renderer._device.makePipelineDataSetSerializer(
-                    descriptor: pipelineDataSetSerializerDescriptor
+        Task(
+            operation: {
+                guard let renderPassDescriptor = view.currentMTL4RenderPassDescriptor, let drawable = view.currentDrawable else {
+                    return
+                }
+                let allocator = allocators[Int(frameNumber % 3)]
+                if frameNumber >= 3 {
+                    await sharedEvent.valueSignaled(frameNumber - 3)
+                    allocator.reset()
+                }
+                commandBuffer.beginCommandBuffer(allocator: allocator)
+                let renderCommandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
+                if let pipelineState {
+                    renderCommandEncoder.setRenderPipelineState(pipelineState)
+                } else {
+                    let pipelineState: any MTLRenderPipelineState
+                    let archiveURL = URL(filePath: "renderPipelineStateArchive.bin")
+                    let library = _renderer._device.makeDefaultLibrary()!
+                    let pipelineDescriptor = MTL4RenderPipelineDescriptor()
+                    pipelineDescriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
+                    let fragmentFunctionDescriptor = MTL4LibraryFunctionDescriptor()
+                    fragmentFunctionDescriptor.library = library
+                    fragmentFunctionDescriptor.name = "fragmentShader"
+                    pipelineDescriptor.fragmentFunctionDescriptor = fragmentFunctionDescriptor
+                    pipelineDescriptor.rasterSampleCount = 4
+                    let vertexFunctionDescriptor = MTL4LibraryFunctionDescriptor()
+                    vertexFunctionDescriptor.library = library
+                    vertexFunctionDescriptor.name = "vertexShader"
+                    pipelineDescriptor.vertexFunctionDescriptor = vertexFunctionDescriptor
+                    do {
+                        let archive = try _renderer._device.makeArchive(url: archiveURL)
+                        pipelineState = try! archive.makeRenderPipelineState(descriptor: pipelineDescriptor)
+                    } catch {
+                        let pipelineDataSetSerializerDescriptor = MTL4PipelineDataSetSerializerDescriptor()
+                        pipelineDataSetSerializerDescriptor.configuration = .captureBinaries
+                        let pipelineDataSetSerializer = _renderer._device.makePipelineDataSetSerializer(
+                            descriptor: pipelineDataSetSerializerDescriptor
+                        )
+                        let compilerDescriptor = MTL4CompilerDescriptor()
+                        compilerDescriptor.pipelineDataSetSerializer = pipelineDataSetSerializer
+                        let compiler = try! _renderer._device.makeCompiler(descriptor: compilerDescriptor)
+                        pipelineState = try! await compiler.makeRenderPipelineState(descriptor: pipelineDescriptor)
+                        try! pipelineDataSetSerializer.serializeAsArchiveAndFlush(url: archiveURL)
+                    }
+                    renderCommandEncoder.setRenderPipelineState(pipelineState)
+                    self.pipelineState = pipelineState
+                }
+                renderCommandEncoder.setCullMode(.back)
+                renderCommandEncoder.setDepthStencilState(depthStencilState)
+                renderCommandEncoder.setViewport(
+                    MTLViewport(
+                        originX: 0,
+                        originY: 0,
+                        width: view.drawableSize.width,
+                        height: view.drawableSize.height,
+                        znear: 0,
+                        zfar: 1
+                    )
                 )
-                let compilerDescriptor = MTL4CompilerDescriptor()
-                compilerDescriptor.pipelineDataSetSerializer = pipelineDataSetSerializer
-                let compiler = try! _renderer._device.makeCompiler(descriptor: compilerDescriptor)
-                pipelineState = try! compiler.makeRenderPipelineState(descriptor: pipelineDescriptor)
-                try! pipelineDataSetSerializer.serializeAsArchiveAndFlush(url: archiveURL)
+                renderCommandEncoder.setArgumentTable(argumentTable, stages: .vertex)
+                renderCommandEncoder.drawIndexedPrimitives(
+                    primitiveType: .triangle,
+                    indexType: .uint32,
+                    indexBuffer: indexBuffer.gpuAddress,
+                    indexBufferLength: indexBuffer.length,
+                    indirectBuffer: indirectBuffer.gpuAddress
+                )
+                renderCommandEncoder.endEncoding()
+                commandBuffer.endCommandBuffer()
+                _renderer._commandQueue.waitForDrawable(drawable)
+                _renderer._commandQueue.commit([commandBuffer])
+                _renderer._commandQueue.signalDrawable(drawable)
+                _renderer._commandQueue.signalEvent(sharedEvent, value: frameNumber)
+                drawable.present()
+                frameNumber += 1
             }
-            renderCommandEncoder.setRenderPipelineState(pipelineState)
-            self.pipelineState = pipelineState
-        }
-        renderCommandEncoder.setCullMode(.back)
-        renderCommandEncoder.setDepthStencilState(depthStencilState)
-        renderCommandEncoder.setViewport(
-            MTLViewport(
-                originX: 0,
-                originY: 0,
-                width: view.drawableSize.width,
-                height: view.drawableSize.height,
-                znear: 0,
-                zfar: 1
-            )
         )
-        renderCommandEncoder.setArgumentTable(argumentTable, stages: .vertex)
-        renderCommandEncoder.drawIndexedPrimitives(
-            primitiveType: .triangle,
-            indexType: .uint32,
-            indexBuffer: indexBuffer.gpuAddress,
-            indexBufferLength: indexBuffer.length,
-            indirectBuffer: indirectBuffer.gpuAddress
-        )
-        renderCommandEncoder.endEncoding()
-        commandBuffer.endCommandBuffer()
-        _renderer._commandQueue.waitForDrawable(drawable)
-        _renderer._commandQueue.commit([commandBuffer])
-        _renderer._commandQueue.signalDrawable(drawable)
-        _renderer._commandQueue.signalEvent(sharedEvent, value: frameNumber)
-        drawable.present()
-        frameNumber += 1
     }
 }
