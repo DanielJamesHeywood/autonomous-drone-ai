@@ -4,8 +4,6 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     
     let _renderer: Renderer
     
-    let device = MTLCreateSystemDefaultDevice()!
-    
     let commandQueue: any MTL4CommandQueue
     
     let commandBuffer: any MTL4CommandBuffer
@@ -28,20 +26,20 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     
     init(renderer: Renderer) {
         _renderer = renderer
-        self.commandQueue = device.makeMTL4CommandQueue()!
-        self.commandBuffer = device.makeCommandBuffer()!
+        self.commandQueue = _renderer._device.makeMTL4CommandQueue()!
+        self.commandBuffer = _renderer._device.makeCommandBuffer()!
         let argumentTableDescriptor = MTL4ArgumentTableDescriptor()
-        self.argumentTable = try! device.makeArgumentTable(descriptor: argumentTableDescriptor)
+        self.argumentTable = try! _renderer._device.makeArgumentTable(descriptor: argumentTableDescriptor)
         var allocators = [] as [MTL4CommandAllocator]
         repeat {
-            allocators.append(device.makeCommandAllocator()!)
+            allocators.append(_renderer._device.makeCommandAllocator()!)
         } while allocators.count < 3
         self.allocators = allocators
         let depthStencilDescriptor = MTLDepthStencilDescriptor()
         depthStencilDescriptor.depthCompareFunction = .less
         depthStencilDescriptor.isDepthWriteEnabled = true
-        self.depthStencilState = device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
-        self.indexBuffer = device.makeBuffer(bytes: [0, 1, 2, 3, 2, 1] as [UInt32], length: 24)!
+        self.depthStencilState = _renderer._device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
+        self.indexBuffer = _renderer._device.makeBuffer(bytes: [0, 1, 2, 3, 2, 1] as [UInt32], length: 24)!
         var indirectArguments = MTLDrawIndexedPrimitivesIndirectArguments(
             indexCount: 6,
             instanceCount: 1,
@@ -49,8 +47,8 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             baseVertex: 0,
             baseInstance: 0
         )
-        self.indirectBuffer = device.makeBuffer(bytes: &indirectArguments, length: MemoryLayout.size(ofValue: indirectArguments))!
-        self.sharedEvent = device.makeSharedEvent()!
+        self.indirectBuffer = _renderer._device.makeBuffer(bytes: &indirectArguments, length: MemoryLayout.size(ofValue: indirectArguments))!
+        self.sharedEvent = _renderer._device.makeSharedEvent()!
     }
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
@@ -73,7 +71,7 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
         } else {
             let pipelineState: any MTLRenderPipelineState
             let archiveURL = URL(filePath: "renderPipelineStateArchive.bin")
-            let library = device.makeDefaultLibrary()!
+            let library = _renderer._device.makeDefaultLibrary()!
             let pipelineDescriptor = MTL4RenderPipelineDescriptor()
             pipelineDescriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
             let fragmentFunctionDescriptor = MTL4LibraryFunctionDescriptor()
@@ -86,17 +84,17 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             vertexFunctionDescriptor.name = "vertexShader"
             pipelineDescriptor.vertexFunctionDescriptor = vertexFunctionDescriptor
             do {
-                let archive = try device.makeArchive(url: archiveURL)
+                let archive = try _renderer._device.makeArchive(url: archiveURL)
                 pipelineState = try! archive.makeRenderPipelineState(descriptor: pipelineDescriptor)
             } catch {
                 let pipelineDataSetSerializerDescriptor = MTL4PipelineDataSetSerializerDescriptor()
                 pipelineDataSetSerializerDescriptor.configuration = .captureBinaries
-                let pipelineDataSetSerializer = device.makePipelineDataSetSerializer(
+                let pipelineDataSetSerializer = _renderer._device.makePipelineDataSetSerializer(
                     descriptor: pipelineDataSetSerializerDescriptor
                 )
                 let compilerDescriptor = MTL4CompilerDescriptor()
                 compilerDescriptor.pipelineDataSetSerializer = pipelineDataSetSerializer
-                let compiler = try! device.makeCompiler(descriptor: compilerDescriptor)
+                let compiler = try! _renderer._device.makeCompiler(descriptor: compilerDescriptor)
                 pipelineState = try! compiler.makeRenderPipelineState(descriptor: pipelineDescriptor)
                 try! pipelineDataSetSerializer.serializeAsArchiveAndFlush(url: archiveURL)
             }

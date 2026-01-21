@@ -1,2 +1,5 @@
 
-actor Renderer {}
+actor Renderer {
+    
+    let _device = MTLCreateSystemDefaultDevice()!
+}
