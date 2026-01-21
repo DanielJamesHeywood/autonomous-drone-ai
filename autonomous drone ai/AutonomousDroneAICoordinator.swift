@@ -4,39 +4,39 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
     
     let _renderer: Renderer
     
-    let commandBuffer: any MTL4CommandBuffer
+    let _commandBuffer: any MTL4CommandBuffer
     
-    let argumentTable: any MTL4ArgumentTable
+    let _argumentTable: any MTL4ArgumentTable
     
-    let allocators: [any MTL4CommandAllocator]
+    let _allocators: [any MTL4CommandAllocator]
     
-    let depthStencilState: any MTLDepthStencilState
+    let _depthStencilState: any MTLDepthStencilState
     
-    let indexBuffer: any MTLBuffer
+    let _indexBuffer: any MTLBuffer
     
-    let indirectBuffer: any MTLBuffer
+    let _indirectBuffer: any MTLBuffer
     
-    let sharedEvent: any MTLSharedEvent
+    let _sharedEvent: any MTLSharedEvent
     
-    var pipelineState: (any MTLRenderPipelineState)?
+    var _pipelineState: (any MTLRenderPipelineState)?
     
-    var frameNumber = 0 as UInt64
+    var _frameNumber = 0 as UInt64
     
     init(renderer: Renderer) {
         _renderer = renderer
-        self.commandBuffer = _renderer._device.makeCommandBuffer()!
+        _commandBuffer = _renderer._device.makeCommandBuffer()!
         let argumentTableDescriptor = MTL4ArgumentTableDescriptor()
-        self.argumentTable = try! _renderer._device.makeArgumentTable(descriptor: argumentTableDescriptor)
+        _argumentTable = try! _renderer._device.makeArgumentTable(descriptor: argumentTableDescriptor)
         var allocators = [] as [MTL4CommandAllocator]
         repeat {
             allocators.append(_renderer._device.makeCommandAllocator()!)
         } while allocators.count < 3
-        self.allocators = allocators
+        _allocators = allocators
         let depthStencilDescriptor = MTLDepthStencilDescriptor()
         depthStencilDescriptor.depthCompareFunction = .less
         depthStencilDescriptor.isDepthWriteEnabled = true
-        self.depthStencilState = _renderer._device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
-        self.indexBuffer = _renderer._device.makeBuffer(bytes: [0, 1, 2, 3, 2, 1] as [UInt32], length: 24)!
+        _depthStencilState = _renderer._device.makeDepthStencilState(descriptor: depthStencilDescriptor)!
+        _indexBuffer = _renderer._device.makeBuffer(bytes: [0, 1, 2, 3, 2, 1] as [UInt32], length: 24)!
         var indirectArguments = MTLDrawIndexedPrimitivesIndirectArguments(
             indexCount: 6,
             instanceCount: 1,
@@ -44,8 +44,8 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
             baseVertex: 0,
             baseInstance: 0
         )
-        self.indirectBuffer = _renderer._device.makeBuffer(bytes: &indirectArguments, length: MemoryLayout.size(ofValue: indirectArguments))!
-        self.sharedEvent = _renderer._device.makeSharedEvent()!
+        _indirectBuffer = _renderer._device.makeBuffer(bytes: &indirectArguments, length: MemoryLayout.size(ofValue: indirectArguments))!
+        _sharedEvent = _renderer._device.makeSharedEvent()!
     }
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
@@ -56,15 +56,15 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
                 guard let renderPassDescriptor = view.currentMTL4RenderPassDescriptor, let drawable = view.currentDrawable else {
                     return
                 }
-                let allocator = allocators[Int(frameNumber % 3)]
-                if frameNumber >= 3 {
-                    await sharedEvent.valueSignaled(frameNumber - 3)
+                let allocator = _allocators[Int(_frameNumber % 3)]
+                if _frameNumber >= 3 {
+                    await _sharedEvent.valueSignaled(_frameNumber - 3)
                     allocator.reset()
                 }
-                commandBuffer.beginCommandBuffer(allocator: allocator)
-                let renderCommandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
-                if let pipelineState {
-                    renderCommandEncoder.setRenderPipelineState(pipelineState)
+                _commandBuffer.beginCommandBuffer(allocator: allocator)
+                let renderCommandEncoder = _commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
+                if let _pipelineState {
+                    renderCommandEncoder.setRenderPipelineState(_pipelineState)
                 } else {
                     let pipelineState: any MTLRenderPipelineState
                     let archiveURL = URL(filePath: "renderPipelineStateArchive.bin")
@@ -96,10 +96,10 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
                         try! pipelineDataSetSerializer.serializeAsArchiveAndFlush(url: archiveURL)
                     }
                     renderCommandEncoder.setRenderPipelineState(pipelineState)
-                    self.pipelineState = pipelineState
+                    _pipelineState = pipelineState
                 }
                 renderCommandEncoder.setCullMode(.back)
-                renderCommandEncoder.setDepthStencilState(depthStencilState)
+                renderCommandEncoder.setDepthStencilState(_depthStencilState)
                 renderCommandEncoder.setViewport(
                     MTLViewport(
                         originX: 0,
@@ -110,22 +110,22 @@ class AutonomousDroneAICoordinator: NSObject, MTKViewDelegate {
                         zfar: 1
                     )
                 )
-                renderCommandEncoder.setArgumentTable(argumentTable, stages: .vertex)
+                renderCommandEncoder.setArgumentTable(_argumentTable, stages: .vertex)
                 renderCommandEncoder.drawIndexedPrimitives(
                     primitiveType: .triangle,
                     indexType: .uint32,
-                    indexBuffer: indexBuffer.gpuAddress,
-                    indexBufferLength: indexBuffer.length,
-                    indirectBuffer: indirectBuffer.gpuAddress
+                    indexBuffer: _indexBuffer.gpuAddress,
+                    indexBufferLength: _indexBuffer.length,
+                    indirectBuffer: _indirectBuffer.gpuAddress
                 )
                 renderCommandEncoder.endEncoding()
-                commandBuffer.endCommandBuffer()
+                _commandBuffer.endCommandBuffer()
                 _renderer._commandQueue.waitForDrawable(drawable)
-                _renderer._commandQueue.commit([commandBuffer])
+                _renderer._commandQueue.commit([_commandBuffer])
                 _renderer._commandQueue.signalDrawable(drawable)
-                _renderer._commandQueue.signalEvent(sharedEvent, value: frameNumber)
+                _renderer._commandQueue.signalEvent(_sharedEvent, value: _frameNumber)
                 drawable.present()
-                frameNumber += 1
+                _frameNumber += 1
             }
         )
     }
