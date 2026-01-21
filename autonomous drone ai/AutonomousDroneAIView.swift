@@ -3,6 +3,12 @@ import SwiftUI
 
 struct AutonomousDroneAIView: NSViewRepresentable {
     
+    let _renderer: Renderer
+    
+    init(renderer: Renderer) {
+        _renderer = renderer
+    }
+    
     func makeNSView(context: Context) -> MTKView {
         let view = MTKView()
         view.delegate = context.coordinator
@@ -14,6 +20,6 @@ struct AutonomousDroneAIView: NSViewRepresentable {
     func updateNSView(_ view: MTKView, context: Context) {}
     
     func makeCoordinator() -> AutonomousDroneAICoordinator {
-        AutonomousDroneAICoordinator()
+        AutonomousDroneAICoordinator(renderer: _renderer)
     }
 }
