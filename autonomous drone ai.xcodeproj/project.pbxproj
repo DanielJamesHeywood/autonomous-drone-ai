@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6532F1A42F24523000313D21 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6532F1A32F24523000313D21 /* README.md */; };
+		6532F1A82F2456BD00313D21 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6532F1A72F2456BD00313D21 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		651332572F09B8610045C56E /* autonomous drone ai.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "autonomous drone ai.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6532F1A32F24523000313D21 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		6532F1A72F2456BD00313D21 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -37,7 +37,7 @@
 		6513324E2F09B8610045C56E = {
 			isa = PBXGroup;
 			children = (
-				6532F1A32F24523000313D21 /* README.md */,
+				6532F1A72F2456BD00313D21 /* README.md */,
 				651332592F09B8610045C56E /* autonomous drone ai */,
 				651332582F09B8610045C56E /* Products */,
 			);
@@ -115,7 +115,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6532F1A42F24523000313D21 /* README.md in Resources */,
+				6532F1A82F2456BD00313D21 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
